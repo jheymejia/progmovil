@@ -3,6 +3,7 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>EcoChallenge - Descubrir retos</title>
+<script src="_sessionCheck.js"></script>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -195,6 +196,25 @@ account_circle
 <button class="fixed bottom-6 right-6 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-lg dark:shadow-black/50">
 <span class="material-symbols-outlined text-3xl">casino</span>
 </button>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 flex justify-around border-t border-border-light dark:border-border-dark bg-card-light dark:bg-card-dark px-2 pt-2 pb-4 shadow-[0_-1px_3px_rgba(0,0,0,0.05)]">
+  <a class="flex flex-col items-center gap-1 text-gray-500 dark:text-gray-400 w-20 hover:text-primary transition-colors" href="dashboard.html">
+    <span class="material-symbols-outlined">dashboard</span>
+    <span class="text-xs font-medium">Inicio</span>
+  </a>
+  <a class="flex flex-col items-center gap-1 text-primary w-20" href="availablechallenges.html">
+    <span class="material-symbols-outlined">emoji_events</span>
+    <span class="text-xs font-bold">Retos</span>
+  </a>
+  <a class="flex flex-col items-center gap-1 text-gray-500 dark:text-gray-400 w-20 hover:text-primary transition-colors" href="community.html">
+    <span class="material-symbols-outlined">groups</span>
+    <span class="text-xs font-medium">Comunidad</span>
+  </a>
+  <a class="flex flex-col items-center gap-1 text-gray-500 dark:text-gray-400 w-20 hover:text-primary transition-colors" href="profile.html">
+    <span class="material-symbols-outlined">person</span>
+    <span class="text-xs font-medium">Perfil</span>
+  </a>
+</nav>
 </div>
 
 </body></html>

@@ -6,6 +6,7 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Panel de EcoChallenge</title>
+    <script src="_sessionCheck.js"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap"
         rel="stylesheet" />
@@ -99,18 +100,18 @@
                     <div
                         class="flex min-w-[120px] flex-1 flex-col gap-1 rounded-lg p-4 bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark">
                         <p class="text-text-light dark:text-text-dark text-sm font-medium leading-normal">EcoPuntos</p>
-                        <p class="text-primary tracking-light text-2xl font-bold leading-tight">1,240</p>
+                        <p id="puntosTotales" class="text-primary tracking-light text-2xl font-bold leading-tight">0</p>
                     </div>
                     <div
                         class="flex min-w-[120px] flex-1 flex-col gap-1 rounded-lg p-4 bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark">
-                        <p class="text-text-light dark:text-text-dark text-sm font-medium leading-normal">Racha</p>
-                        <p class="text-primary tracking-light text-2xl font-bold leading-tight">15 días</p>
+                        <p class="text-text-light dark:text-text-dark text-sm font-medium leading-normal">Retos completados</p>
+                        <p id="retosCompletados" class="text-primary tracking-light text-2xl font-bold leading-tight">0</p>
                     </div>
                     <div
                         class="flex min-w-[120px] flex-1 flex-col gap-1 rounded-lg p-4 bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark">
                         <p class="text-text-light dark:text-text-dark text-sm font-medium leading-normal">CO2 ahorrado
                         </p>
-                        <p class="text-primary tracking-light text-2xl font-bold leading-tight">28 kg</p>
+                        <p id="co2Ahorrado" class="text-primary tracking-light text-2xl font-bold leading-tight">0 kg</p>
                     </div>
                 </div>
             </div>
@@ -213,19 +214,19 @@
         <!-- Bottom Navigation Bar -->
         <nav
             class="fixed bottom-0 left-0 right-0 flex justify-around border-t border-border-light dark:border-border-dark bg-card-light dark:bg-card-dark px-2 pt-2 pb-4 shadow-[0_-1px_3px_rgba(0,0,0,0.05)]">
-            <a class="flex flex-col items-center gap-1 text-primary w-20" href="#">
+            <a class="flex flex-col items-center gap-1 text-primary w-20" href="dashboard.html">
                 <span class="material-symbols-outlined">dashboard</span>
                 <span class="text-xs font-bold">Inicio</span>
             </a>
-            <a class="flex flex-col items-center gap-1 text-gray-500 dark:text-gray-400 w-20" href="#">
+            <a class="flex flex-col items-center gap-1 text-gray-500 dark:text-gray-400 w-20 hover:text-primary transition-colors" href="availablechallenges.html">
                 <span class="material-symbols-outlined">emoji_events</span>
                 <span class="text-xs font-medium">Retos</span>
             </a>
-            <a class="flex flex-col items-center gap-1 text-gray-500 dark:text-gray-400 w-20" href="#">
+            <a class="flex flex-col items-center gap-1 text-gray-500 dark:text-gray-400 w-20 hover:text-primary transition-colors" href="community.html">
                 <span class="material-symbols-outlined">groups</span>
                 <span class="text-xs font-medium">Comunidad</span>
             </a>
-            <a class="flex flex-col items-center gap-1 text-gray-500 dark:text-gray-400 w-20" href="#">
+            <a class="flex flex-col items-center gap-1 text-gray-500 dark:text-gray-400 w-20 hover:text-primary transition-colors" href="profile.html">
                 <span class="material-symbols-outlined">person</span>
                 <span class="text-xs font-medium">Perfil</span>
             </a>
@@ -233,8 +234,8 @@
     </div>
 
     <script>
-        // Cargar nombre del usuario desde la sesión al iniciar la página
-        function cargarNombreUsuario() {
+        // Cargar datos del usuario desde la sesión
+        function cargarDatosUsuario() {
             const sesion = localStorage.getItem('ecochallenge_sesion');
 
             if (sesion) {
@@ -242,6 +243,18 @@
                     const usuario = JSON.parse(sesion);
                     const nombre = usuario.nombre || 'Usuario';
                     document.getElementById('nombreUsuario').textContent = '¡Hola, ' + nombre + '!';
+                    
+                    // Cargar puntos totales
+                    const puntos = usuario.puntosTotales || 0;
+                    document.getElementById('puntosTotales').textContent = puntos.toLocaleString();
+                    
+                    // Cargar retos completados
+                    const retosCompletos = (usuario.retosCompletados && usuario.retosCompletados.length) || 0;
+                    document.getElementById('retosCompletados').textContent = retosCompletos;
+                    
+                    // Calcular CO2 ahorrado (estimación: 2 kg por reto completado)
+                    const co2 = retosCompletos * 2;
+                    document.getElementById('co2Ahorrado').textContent = co2 + ' kg';
                 } catch (error) {
                     console.error('Error al parsear sesión:', error);
                 }
@@ -259,7 +272,7 @@
 
         // Ejecutar al cargar la página
         document.addEventListener('DOMContentLoaded', function () {
-            cargarNombreUsuario();
+            cargarDatosUsuario();
             document.getElementById('btnCerrarSesion').addEventListener('click', cerrarSesion);
         });
     </script>
