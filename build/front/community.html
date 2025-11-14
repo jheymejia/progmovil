@@ -46,13 +46,33 @@
       }
     </style>
 <style>
-    body {
-      min-height: max(884px, 100dvh);
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow: hidden;
+    }
+    #app {
+      height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+      min-height: 100dvh;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .app-content {
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      flex: 1 1 auto;
     }
   </style>
   </head>
 <body class="bg-background-light dark:bg-background-dark font-display text-text-light dark:text-text-dark">
-<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div id="app" class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+  <div class="app-content">
 <!-- Top App Bar -->
 <div class="sticky top-0 z-10 flex items-center bg-surface-light dark:bg-surface-dark p-4 pb-2 justify-between border-b border-border-light dark:border-border-dark">
 <div class="flex size-12 shrink-0 items-center">
@@ -150,6 +170,7 @@
 </div>
 </div>
 </main>
+  </div>
 <!-- Floating Action Button -->
 <div class="fixed bottom-24 right-6 z-20">
 <button class="flex h-16 w-16 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-primary text-text-light shadow-lg">

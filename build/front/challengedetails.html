@@ -51,8 +51,35 @@
   </style>
   </head>
 <body class="font-display">
-<div class="relative flex min-h-screen w-full flex-col bg-background-light dark:bg-background-dark group/design-root overflow-x-hidden text-text-light dark:text-text-dark">
-<div class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-10">
+<style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow: hidden;
+    }
+    #app {
+      height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+      min-height: 100dvh;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .app-content {
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      flex: 1 1 auto;
+    }
+  </style>
+</head>
+<body class="font-display">
+<div id="app" class="relative flex min-h-screen w-full flex-col bg-background-light dark:bg-background-dark group/design-root overflow-x-hidden text-text-light dark:text-text-dark">
+  <div class="app-content">
+  <div class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-10">
 <div class="flex size-12 shrink-0 items-center justify-center">
 <span class="material-symbols-outlined text-text-light dark:text-text-dark">arrow_back</span>
 </div>
@@ -102,9 +129,10 @@
 </div>
 </div>
 </main>
-<div class="sticky bottom-0 bg-background-light dark:bg-background-dark p-4 w-full border-t border-border-light dark:border-border-dark">
-<button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 bg-primary text-white gap-2 text-base font-bold leading-normal tracking-wide transition-colors hover:bg-primary/90">Aceptar este reto</button>
-</div>
+  </div>
+  <div class="sticky bottom-0 bg-background-light dark:bg-background-dark p-4 w-full border-t border-border-light dark:border-border-dark">
+    <button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 bg-primary text-white gap-2 text-base font-bold leading-normal tracking-wide transition-colors hover:bg-primary/90">Aceptar este reto</button>
+  </div>
 </div>
 
 </body></html>

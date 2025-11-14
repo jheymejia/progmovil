@@ -43,8 +43,32 @@
     }
   </style>
   <style>
-    body {
-      min-height: max(884px, 100dvh);
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow: hidden; /* prevent page scrolling; internal containers may scroll */
+    }
+    /* App shell fills the safe viewport on mobile devices and respects notches/home bars */
+    #app {
+      height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+      min-height: 100dvh;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      align-items: center;
+      justify-content: center;
+    }
+    /* Allow internal scrolling for overflow inside the app shell */
+    .app-content {
+      width: 100%;
+      max-width: 100%;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
     }
   </style>
 </head>
@@ -52,14 +76,14 @@
 <body class="bg-background-light dark:bg-background-dark font-display text-text-light dark:text-text-dark">
   <!-- Cargar simuladorLocal para acceso a CRUD -->
   <script src="../back/simuladorLocal.js"></script>
-  <div
+  <div id="app"
     class="relative flex min-h-screen w-full flex-col items-center justify-center bg-background-light dark:bg-background-dark group/design-root overflow-x-hidden p-4">
     <!-- Background element -->
     <div class="absolute top-0 left-0 w-full h-full opacity-10 dark:opacity-5 bg-cover bg-center"
       data-alt="Subtle background image of a forest floor with light filtering through the trees."
       style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBlLZqOF4h3OFxj9akcCcpB87Gh0XrELTeasLsfpp0KgRJ9YJ-DJ4fbz_K7zJsxZl5Dx1BcHnbYo058EYAC3ea0-52o638BEe_As2FFJVanRfRKS-a3jv5bTSFWVLJLAZVpP6Nu-PSp-aomlgEeSWwRphkHZKjxi-Zd4c-VKO0y8qtrpfxkUs6ThR3BK4-wF3sTSUgyvKibTEp5rylBtOiplfyt3EFmJvlnqQdVCClgaAuyWobJ3_bsZ6zDGID_Yty1jnvwfCcfDSYT');">
     </div>
-    <div class="relative z-10 w-full max-w-md">
+    <div class="relative z-10 w-full max-w-md app-content">
       <!-- Header Section -->
       <div class="text-center">
         <h1 class="text-primary tracking-tight text-[32px] font-bold leading-tight">EcoChallenge</h1>

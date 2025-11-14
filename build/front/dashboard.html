@@ -47,14 +47,34 @@
         }
     </style>
     <style>
-        body {
-            min-height: max(884px, 100dvh);
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow: hidden;
+        }
+        #app {
+            height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+            min-height: 100dvh;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .app-content {
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+            flex: 1 1 auto;
         }
     </style>
 </head>
 
 <body class="font-display bg-background-light dark:bg-background-dark">
-    <div class="relative flex min-h-screen w-full flex-col group/design-root overflow-x-hidden pb-28">
+    <div id="app" class="relative flex min-h-screen w-full flex-col group/design-root overflow-x-hidden pb-28">
+        <div class="app-content">
         <!-- Top App Bar -->
         <header
             class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-10">
@@ -206,6 +226,7 @@
                 </div>
             </div>
         </main>
+        </div>
         <!-- Quick Action Button (FAB) -->
         <button
             class="fixed bottom-24 right-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-white shadow-lg">

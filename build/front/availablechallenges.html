@@ -51,15 +51,35 @@
       min-height: max(884px, 100dvh);
     }
   </style>
-<style>
-    body {
-      min-height: max(884px, 100dvh);
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow: hidden;
+    }
+    #app {
+      height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+      min-height: 100dvh;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .app-content {
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      flex: 1 1 auto;
     }
   </style>
   </head>
 <body class="font-display bg-background-light dark:bg-background-dark">
-<div class="relative flex min-h-screen w-full flex-col">
-<header class="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm">
+<div id="app" class="relative flex min-h-screen w-full flex-col">
+  <div class="app-content">
+    <header class="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm">
 <div class="flex items-center p-4 pb-2 justify-between">
 <h1 class="flex-1 text-center text-lg font-bold leading-tight tracking-[-0.015em] text-text-light dark:text-text-dark">Descubrir retos</h1>
 <button id="btnCerrarSesionTop" class="flex h-10 w-10 shrink-0 items-center justify-center text-text-light dark:text-text-dark hover:bg-black/5 dark:hover:bg-white/5 rounded-lg transition-colors" title="Cerrar sesión">
@@ -186,7 +206,8 @@
 </div>
 </div>
 </main>
-<button class="fixed bottom-6 right-6 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-lg dark:shadow-black/50">
+    </div>
+  <button class="fixed bottom-6 right-6 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-lg dark:shadow-black/50">
 <span class="material-symbols-outlined text-3xl">casino</span>
 </button>
 <!-- Bottom Navigation Bar -->
