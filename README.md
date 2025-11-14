@@ -7,13 +7,6 @@
 
 **Alcance y consideraciones de arquitectura**:
 
-**Cómo probar el prototipo localmente**:
-  ```powershell
-  cd C:\wamp64\www\poligran\progmovil
-  python -m http.server 5500
-  ```
-  y luego abrir `http://localhost:5500/welcome.html`.
-
 **Justificación**
 
 **Razón de ser de la aplicación**
@@ -66,4 +59,209 @@ Cómo ejecutar el prototipo localmente
   cd C:\wamp64\www\poligran\progmovil
   python -m http.server 5500
   ```
-  Abrir `http://localhost:5500/welcome.html`.
+    Abrir `http://localhost:5500/welcome.html`.
+
+## Arquitectura técnica: Backend simulado con localStorage
+
+### Estructura de almacenamiento
+
+El backend está completamente simulado en el navegador utilizando la API `localStorage` de JavaScript. No requiere servidor externo.
+
+**Clave de almacenamiento principal**: `ecochallenge_db_v1`
+
+```json
+{
+  "retos": [
+    {
+      "id": "r1",
+      "titulo": "Lunes sin carne",
+      "descripcion": "Evita consumir carne un día a la semana",
+      "categoria": "Alimentación",
+      "puntos": 50,
+      "completado": false,
+      "fechaCreacion": "2025-01-01T10:00:00Z"
+    }
+  ],
+  "usuarios": [
+    {
+      "id": "u1",
+      "nombre": "Juan Pérez",
+      "email": "juan@ecochallenge.com",
+      "password": "hashedPassword123",
+      "fechaRegistro": "2025-01-01T10:00:00Z",
+      "puntosTotales": 350,
+      "retosCompletados": ["r1", "r3"]
+    }
+  ]
+}
+```
+
+**Sesión de usuario activa**: `ecochallenge_sesion`
+- Se guarda cuando el usuario inicia sesión o se registra
+- Contiene los datos del usuario actual (nombre, email, puntos, etc.)
+- Se utiliza para llenar dinámicamente interfaces como el dashboard
+
+---
+
+### Archivo: `back/simuladorLocal.js`
+
+**Propósito**: Capa CRUD (Create, Read, Update, Delete) que gestiona toda la lógica de datos.
+
+**Funciones principales**:
+
+#### Inicialización
+```javascript
+function inicializarBaseDatos()
+```
+- Crea la estructura JSON inicial si no existe
+- Se ejecuta automáticamente al cargar la página
+- Clave: `ecochallenge_db_v1`
+
+#### Retos (Challenges)
+```javascript
+function obtenerTodosRetos()              // Retorna array de todos los retos
+function obtenerRetoPorId(id)             // Retorna un reto específico
+function crearReto(reto)                  // Crea nuevo reto, retorna {error} o {id, ...}
+function actualizarReto(id, cambios)      // Actualiza campos de un reto
+function eliminarReto(id)                 // Elimina un reto
+function buscarPorCampo(campo, valor)     // Búsqueda genérica
+```
+
+#### Usuarios (Users & Authentication)
+```javascript
+function obtenerTodosUsuarios()           // Retorna array de todos los usuarios
+function obtenerUsuarioPorEmail(email)    // Búsqueda de usuario por correo
+function crearUsuario(usuario)            // Registra nuevo usuario
+  // Parámetros: {nombre, email, password}
+  // Retorna: {error: "..."} o {id, nombre, email, ...}
+function autenticarUsuario(email, password) // Valida credenciales
+  // Retorna: {error: "..."} o {success: true, usuario: {...}}
+function actualizarUsuario(id, cambios)   // Actualiza perfil de usuario
+```
+
+**Características de seguridad (educativas)**:
+- Validación de email único (no permite duplicados)
+- Validación de contraseña mínimo 6 caracteres
+- Las contraseñas se guardan en texto plano (⚠️ **solo para fines educativos**)
+- Manejo de errores con mensajes claros
+
+**Exposición global**:
+```javascript
+window.simuladorLocal = {
+  inicializarBaseDatos,
+  obtenerTodosRetos,
+  obtenerRetoPorId,
+  // ... (14 funciones disponibles globalmente)
+}
+```
+
+---
+
+### Archivo: `front/app.js`
+
+**Propósito**: Capa de integración entre la UI (HTML) y la lógica de datos (`simuladorLocal.js`).
+
+**Funciones principales**:
+
+#### Gestión de sesión
+```javascript
+function guardarSesion(usuario)           // Guarda sesión en localStorage['ecochallenge_sesion']
+function obtenerUsuarioActual()           // Lee usuario actual desde la sesión
+function cerrarSesion()                   // Limpia sesión y redirige a login
+```
+
+#### Carga de datos en UI
+```javascript
+function cargarRetosDisponibles()         // Obtiene retos y llena #lista-retos
+function cargarPerfilUsuario()            // Carga datos del usuario en el dashboard
+```
+
+#### Flujos de ejemplo
+```javascript
+function ejemploCrearUsuario()            // Función de prueba en consola
+```
+
+**Patrón de uso**:
+1. HTML carga `simuladorLocal.js` primero
+2. HTML carga `app.js` segundo
+3. Al hacer `DOMContentLoaded`, se ejecutan funciones como `cargarRetosDisponibles()`
+
+---
+
+### Archivo: `front/login.html`
+
+**Propósito**: Interfaz de autenticación con toggle entre login y registro.
+
+**Lógica JavaScript embebida**:
+
+#### Cambio de modo (Login ↔ Registro)
+```javascript
+function cambiarModo(modo)
+  // modo = 'login' o 'registro'
+  // Muestra/oculta campos condicionalmente
+  // Actualiza texto del botón
+```
+
+#### Procesamiento de autenticación
+```javascript
+function procesarAuth(event)
+  // Delegador que decide si hacer login o registro
+
+function autenticarUsuario(email, password)
+  // Llama a simuladorLocal.autenticarUsuario()
+  // Si éxito: guarda sesión y redirige a dashborad.html
+  // Si error: muestra mensaje de error
+
+function registrarUsuario(nombre, email, password)
+  // Llama a simuladorLocal.crearUsuario()
+  // Si éxito: guarda sesión automáticamente y redirige
+  // Si error: muestra validaciones
+```
+
+#### Utilidades
+```javascript
+function togglePasswordVisibility()       // Muestra/oculta contraseña
+function mostrarMensaje(texto, tipo)      // Muestra error/éxito con estilos
+function limpiarMensaje()                 // Limpia mensajes
+```
+
+---
+
+### Archivo: `front/dashboard.html`
+
+**Propósito**: Panel de usuario que muestra progreso y retos personales.
+
+**Lógica JavaScript embebida**:
+
+```javascript
+function cargarNombreUsuario()
+  // Lee sesión desde localStorage['ecochallenge_sesion']
+  // Actualiza #nombreUsuario con el nombre real
+  // Si no hay sesión, redirige a login.html
+
+function cerrarSesion()
+  // Elimina localStorage['ecochallenge_sesion']
+  // Redirige a login.html
+```
+
+---
+
+### Flujo completo de una operación
+
+**Ejemplo: Usuario se registra**
+
+1. Usuario abre `login.html`
+2. Hace clic en tab "Registrarse"
+3. `cambiarModo('registro')` muestra campo de nombre
+4. Usuario llena: nombre, email, contraseña
+5. Submit → `procesarAuth(event)` → `registrarUsuario()`
+6. `registrarUsuario()` → `simuladorLocal.crearUsuario()`
+7. `simuladorLocal.js`:
+   - Valida email único
+   - Valida contraseña ≥ 6 caracteres
+   - Genera ID único y timestamp
+   - Guarda en `localStorage['ecochallenge_db_v1']`
+   - Retorna usuario creado
+8. En `login.html`: `guardarSesion(usuario)` → almacena en `localStorage['ecochallenge_sesion']`
+9. Redirige a `dashborad.html`
+10. `dashboard.html` ejecuta `cargarNombreUsuario()` → lee sesión → actualiza greeting

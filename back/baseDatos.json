@@ -16,5 +16,16 @@
       "completado": false,
       "fechaCreacion": "2025-11-02"
     }
+  ],
+  "usuarios": [
+    {
+      "id": "u1",
+      "nombre": "Usuario Demo",
+      "email": "demo@ecochallenge.com",
+      "password": "demo123",
+      "fechaRegistro": "2025-11-01T00:00:00.000Z",
+      "puntosTotales": 0,
+      "retosCompletados": []
+    }
   ]
 }

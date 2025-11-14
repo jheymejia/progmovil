@@ -1,11 +1,16 @@
 // En este archivo simulo un backend local usando localStorage como tabla JSON.
 // Las funciones están en español y usan lower camelCase.
+// NOTA: Las contraseñas se guardan en texto plano. Esto es solo para fines educativos y demostrativos.
+// En producción NUNCA se deben guardar contraseñas sin encriptar.
 
 const claveBaseDatos = 'ecochallenge_db_v1';
 
 function inicializarBaseDatos() {
   if (!localStorage.getItem(claveBaseDatos)) {
-    const inicial = { retos: [] };
+    const inicial = { 
+      retos: [],
+      usuarios: []
+    };
     localStorage.setItem(claveBaseDatos, JSON.stringify(inicial));
   }
 }
@@ -61,6 +66,76 @@ function buscarPorCampo(campo, valor) {
   return retos.filter(r => r[campo] === valor);
 }
 
+// Funciones CRUD para usuarios
+
+function obtenerTodosUsuarios() {
+  const db = leerBaseDatos();
+  return db.usuarios || [];
+}
+
+function obtenerUsuarioPorEmail(email) {
+  const usuarios = obtenerTodosUsuarios();
+  return usuarios.find(u => u.email === email) || null;
+}
+
+function crearUsuario(usuario) {
+  const db = leerBaseDatos();
+  db.usuarios = db.usuarios || [];
+  
+  if (obtenerUsuarioPorEmail(usuario.email)) {
+    return { error: 'El email ya está registrado' };
+  }
+  
+  const nuevoUsuario = {
+    id: 'u' + Date.now(),
+    nombre: usuario.nombre,
+    email: usuario.email,
+    password: usuario.password,
+    fechaRegistro: new Date().toISOString(),
+    puntosTotales: 0,
+    retosCompletados: []
+  };
+  
+  db.usuarios.push(nuevoUsuario);
+  guardarBaseDatos(db);
+  return nuevoUsuario;
+}
+
+function autenticarUsuario(email, password) {
+  const usuario = obtenerUsuarioPorEmail(email);
+  
+  if (!usuario) {
+    return { error: 'Usuario no encontrado' };
+  }
+  
+  if (usuario.password !== password) {
+    return { error: 'Contraseña incorrecta' };
+  }
+  
+  return { 
+    success: true, 
+    usuario: {
+      id: usuario.id,
+      nombre: usuario.nombre,
+      email: usuario.email,
+      puntosTotales: usuario.puntosTotales,
+      retosCompletados: usuario.retosCompletados
+    }
+  };
+}
+
+function actualizarUsuario(id, cambios) {
+  const db = leerBaseDatos();
+  db.usuarios = db.usuarios || [];
+  const idx = db.usuarios.findIndex(u => u.id === id);
+  
+  if (idx === -1) return null;
+  
+  db.usuarios[idx] = { ...db.usuarios[idx], ...cambios };
+  guardarBaseDatos(db);
+  return db.usuarios[idx];
+}
+
 // Exportar para uso en páginas incluidas con <script>
 window.simuladorLocal = {
   inicializarBaseDatos,
@@ -71,5 +146,10 @@ window.simuladorLocal = {
   crearReto,
   actualizarReto,
   eliminarReto,
-  buscarPorCampo
+  buscarPorCampo,
+  obtenerTodosUsuarios,
+  obtenerUsuarioPorEmail,
+  crearUsuario,
+  autenticarUsuario,
+  actualizarUsuario
 };

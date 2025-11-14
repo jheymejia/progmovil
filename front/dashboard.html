@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 
-<html class="light" lang="es"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Panel de EcoChallenge</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
-<script id="tailwind-config">
+<html class="light" lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Panel de EcoChallenge</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
             theme: {
@@ -37,150 +40,229 @@
             },
         }
     </script>
-<style>
+    <style>
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
     </style>
-<style>
-    body {
-      min-height: max(884px, 100dvh);
-    }
-  </style>
-  </head>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
 <body class="font-display bg-background-light dark:bg-background-dark">
-<div class="relative flex min-h-screen w-full flex-col group/design-root overflow-x-hidden pb-28">
-<!-- Top App Bar -->
-<header class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-10">
-<div class="flex items-center gap-3">
-<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-12" data-alt="User profile picture of Alex" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBckRmNjwoHB8qi10SojmfEtk65c9VeZCCDNV7DYyANNPYb6WX31rOLcUJsjdnqI1P5oi-i3vCbQ6Z2viIxscJzjC3Q9x3yfR6F6rfAIIHPfQbTyp9mlWSDM4BOrwONIA80tmJ7_vKFWX6lZAdJz-MJkFdpj30LXEAGGYgshU3vKnZcEzebl-vedq-uHYD7Op69qbobz6cuD-FhqLFHVYZb5B7t_Bl37_LwRgp3YwEo3c_6QUuYTm52LDYiIMEsvqUBiw8ucWF1W1Wq");'></div>
-<h1 class="text-text-light dark:text-text-dark text-2xl font-bold leading-tight tracking-[-0.015em]">¡Hola, Alex!</h1>
-</div>
-<button class="text-text-light dark:text-text-dark">
-<span class="material-symbols-outlined text-3xl">notifications</span>
-</button>
-</header>
-<!-- Progress Summary Card -->
-<main class="p-4 flex flex-col gap-6">
-<div class="flex flex-col gap-4 rounded-xl bg-card-light dark:bg-card-dark p-6 border border-border-light dark:border-border-dark shadow-sm">
-<p class="text-text-light dark:text-text-dark text-base font-medium leading-normal">Puntuación de sostenibilidad</p>
-<div class="relative flex items-center justify-center">
-<svg class="size-40 transform -rotate-90" viewbox="0 0 120 120">
-<circle class="dark:stroke-border-dark" cx="60" cy="60" fill="none" r="54" stroke="hsl(120 27% 92%)" stroke-width="12"></circle>
-<circle class="stroke-primary" cx="60" cy="60" fill="none" pathlength="100" r="54" stroke="hsl(120 61% 34%)" stroke-dasharray="75 100" stroke-linecap="round" stroke-width="12"></circle>
-</svg>
-<div class="absolute flex flex-col items-center justify-center">
-<span class="text-text-light dark:text-text-dark text-4xl font-extrabold tracking-tighter">75%</span>
-<span class="text-sm font-medium text-gray-500 dark:text-gray-400">Nivel 5</span>
-</div>
-</div>
-<div class="flex flex-wrap gap-3">
-<div class="flex min-w-[120px] flex-1 flex-col gap-1 rounded-lg p-4 bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark">
-<p class="text-text-light dark:text-text-dark text-sm font-medium leading-normal">EcoPuntos</p>
-<p class="text-primary tracking-light text-2xl font-bold leading-tight">1,240</p>
-</div>
-<div class="flex min-w-[120px] flex-1 flex-col gap-1 rounded-lg p-4 bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark">
-<p class="text-text-light dark:text-text-dark text-sm font-medium leading-normal">Racha</p>
-<p class="text-primary tracking-light text-2xl font-bold leading-tight">15 días</p>
-</div>
-<div class="flex min-w-[120px] flex-1 flex-col gap-1 rounded-lg p-4 bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark">
-<p class="text-text-light dark:text-text-dark text-sm font-medium leading-normal">CO2 ahorrado</p>
-<p class="text-primary tracking-light text-2xl font-bold leading-tight">28 kg</p>
-</div>
-</div>
-</div>
-<!-- My Challenges Section -->
-<div class="flex flex-col">
-<h2 class="text-text-light dark:text-text-dark text-2xl font-bold leading-tight tracking-[-0.015em] px-0 pb-3 pt-2">Mis retos</h2>
-<!-- Tabs -->
-<div class="border-b border-border-light dark:border-border-dark">
-<div class="flex gap-8">
-<a class="flex flex-col items-center justify-center border-b-[3px] border-b-primary pb-3" href="#">
-<p class="text-primary text-base font-bold leading-normal tracking-[0.015em]">Diario</p>
-</a>
-<a class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent pb-3" href="#">
-<p class="text-gray-500 dark:text-gray-400 text-base font-bold leading-normal tracking-[0.015em]">Semanal</p>
-</a>
-</div>
-</div>
-<!-- Challenge Cards List -->
-<div class="flex flex-col gap-4 mt-4">
-<!-- Challenge Card 1 -->
-<div class="flex items-center gap-4 rounded-xl bg-card-light dark:bg-card-dark p-4 border border-border-light dark:border-border-dark shadow-sm">
-<div class="flex size-12 shrink-0 items-center justify-center rounded-full bg-accent/20 text-accent">
-<span class="material-symbols-outlined text-3xl">restaurant</span>
-</div>
-<div class="flex-1">
-<h3 class="text-text-light dark:text-text-dark text-base font-bold leading-normal">Lunes sin carne</h3>
-<div class="mt-2">
-<div class="rounded-full bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark">
-<div class="h-2 rounded-full bg-accent" style="width: 100%;"></div>
-</div>
-</div>
-</div>
-<button class="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-white">
-<span class="material-symbols-outlined">done</span>
-</button>
-</div>
-<!-- Challenge Card 2 -->
-<div class="flex items-center gap-4 rounded-xl bg-card-light dark:bg-card-dark p-4 border border-border-light dark:border-border-dark shadow-sm">
-<div class="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
-<span class="material-symbols-outlined text-3xl">directions_walk</span>
-</div>
-<div class="flex-1">
-<h3 class="text-text-light dark:text-text-dark text-base font-bold leading-normal">Caminata de 30 min</h3>
-<div class="mt-2">
-<div class="rounded-full bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark">
-<div class="h-2 rounded-full bg-primary" style="width: 66%;"></div>
-</div>
-</div>
-</div>
-<button class="flex size-10 shrink-0 items-center justify-center rounded-full border-2 border-primary text-primary bg-transparent">
-<span class="material-symbols-outlined">add</span>
-</button>
-</div>
-<!-- Challenge Card 3 -->
-<div class="flex items-center gap-4 rounded-xl bg-card-light dark:bg-card-dark p-4 border border-border-light dark:border-border-dark shadow-sm">
-<div class="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
-<span class="material-symbols-outlined text-3xl">shopping_bag</span>
-</div>
-<div class="flex-1">
-<h3 class="text-text-light dark:text-text-dark text-base font-bold leading-normal">Bolsa reutilizable</h3>
-<div class="mt-2">
-<div class="rounded-full bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark">
-<div class="h-2 rounded-full bg-primary" style="width: 0%;"></div>
-</div>
-</div>
-</div>
-<button class="flex size-10 shrink-0 items-center justify-center rounded-full border-2 border-primary text-primary bg-transparent">
-<span class="material-symbols-outlined">add</span>
-</button>
-</div>
-</div>
-</div>
-</main>
-<!-- Quick Action Button (FAB) -->
-<button class="fixed bottom-24 right-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-white shadow-lg">
-<span class="material-symbols-outlined text-4xl">add</span>
-</button>
-<!-- Bottom Navigation Bar -->
-<nav class="fixed bottom-0 left-0 right-0 flex justify-around border-t border-border-light dark:border-border-dark bg-card-light dark:bg-card-dark px-2 pt-2 pb-4 shadow-[0_-1px_3px_rgba(0,0,0,0.05)]">
-<a class="flex flex-col items-center gap-1 text-primary w-20" href="#">
-<span class="material-symbols-outlined">dashboard</span>
-<span class="text-xs font-bold">Inicio</span>
-</a>
-<a class="flex flex-col items-center gap-1 text-gray-500 dark:text-gray-400 w-20" href="#">
-<span class="material-symbols-outlined">emoji_events</span>
-<span class="text-xs font-medium">Retos</span>
-</a>
-<a class="flex flex-col items-center gap-1 text-gray-500 dark:text-gray-400 w-20" href="#">
-<span class="material-symbols-outlined">groups</span>
-<span class="text-xs font-medium">Comunidad</span>
-</a>
-<a class="flex flex-col items-center gap-1 text-gray-500 dark:text-gray-400 w-20" href="#">
-<span class="material-symbols-outlined">person</span>
-<span class="text-xs font-medium">Perfil</span>
-</a>
-</nav>
-</div>
-</body></html>
+    <div class="relative flex min-h-screen w-full flex-col group/design-root overflow-x-hidden pb-28">
+        <!-- Top App Bar -->
+        <header
+            class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-10">
+            <div class="flex items-center gap-3">
+                <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-12"
+                    data-alt="User profile picture of Alex"
+                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBckRmNjwoHB8qi10SojmfEtk65c9VeZCCDNV7DYyANNPYb6WX31rOLcUJsjdnqI1P5oi-i3vCbQ6Z2viIxscJzjC3Q9x3yfR6F6rfAIIHPfQbTyp9mlWSDM4BOrwONIA80tmJ7_vKFWX6lZAdJz-MJkFdpj30LXEAGGYgshU3vKnZcEzebl-vedq-uHYD7Op69qbobz6cuD-FhqLFHVYZb5B7t_Bl37_LwRgp3YwEo3c_6QUuYTm52LDYiIMEsvqUBiw8ucWF1W1Wq");'>
+                </div>
+                <h1 id="nombreUsuario"
+                    class="text-text-light dark:text-text-dark text-2xl font-bold leading-tight tracking-[-0.015em]">
+                    ¡Hola, Alex!</h1>
+            </div>
+            <button class="text-text-light dark:text-text-dark">
+                <span class="material-symbols-outlined text-3xl">notifications</span>
+            </button>
+            <button id="btnCerrarSesion"
+                class="text-text-light dark:text-text-dark hover:bg-background-dark dark:hover:bg-white/10 p-2 rounded-lg transition-colors"
+                title="Cerrar sesión">
+                <span class="material-symbols-outlined text-3xl">logout</span>
+            </button>
+        </header>
+        <!-- Progress Summary Card -->
+        <main class="p-4 flex flex-col gap-6">
+            <div
+                class="flex flex-col gap-4 rounded-xl bg-card-light dark:bg-card-dark p-6 border border-border-light dark:border-border-dark shadow-sm">
+                <p class="text-text-light dark:text-text-dark text-base font-medium leading-normal">Puntuación de
+                    sostenibilidad</p>
+                <div class="relative flex items-center justify-center">
+                    <svg class="size-40 transform -rotate-90" viewbox="0 0 120 120">
+                        <circle class="dark:stroke-border-dark" cx="60" cy="60" fill="none" r="54"
+                            stroke="hsl(120 27% 92%)" stroke-width="12"></circle>
+                        <circle class="stroke-primary" cx="60" cy="60" fill="none" pathlength="100" r="54"
+                            stroke="hsl(120 61% 34%)" stroke-dasharray="75 100" stroke-linecap="round"
+                            stroke-width="12"></circle>
+                    </svg>
+                    <div class="absolute flex flex-col items-center justify-center">
+                        <span
+                            class="text-text-light dark:text-text-dark text-4xl font-extrabold tracking-tighter">75%</span>
+                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Nivel 5</span>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-3">
+                    <div
+                        class="flex min-w-[120px] flex-1 flex-col gap-1 rounded-lg p-4 bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark">
+                        <p class="text-text-light dark:text-text-dark text-sm font-medium leading-normal">EcoPuntos</p>
+                        <p class="text-primary tracking-light text-2xl font-bold leading-tight">1,240</p>
+                    </div>
+                    <div
+                        class="flex min-w-[120px] flex-1 flex-col gap-1 rounded-lg p-4 bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark">
+                        <p class="text-text-light dark:text-text-dark text-sm font-medium leading-normal">Racha</p>
+                        <p class="text-primary tracking-light text-2xl font-bold leading-tight">15 días</p>
+                    </div>
+                    <div
+                        class="flex min-w-[120px] flex-1 flex-col gap-1 rounded-lg p-4 bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark">
+                        <p class="text-text-light dark:text-text-dark text-sm font-medium leading-normal">CO2 ahorrado
+                        </p>
+                        <p class="text-primary tracking-light text-2xl font-bold leading-tight">28 kg</p>
+                    </div>
+                </div>
+            </div>
+            <!-- My Challenges Section -->
+            <div class="flex flex-col">
+                <h2
+                    class="text-text-light dark:text-text-dark text-2xl font-bold leading-tight tracking-[-0.015em] px-0 pb-3 pt-2">
+                    Mis retos</h2>
+                <!-- Tabs -->
+                <div class="border-b border-border-light dark:border-border-dark">
+                    <div class="flex gap-8">
+                        <a class="flex flex-col items-center justify-center border-b-[3px] border-b-primary pb-3"
+                            href="#">
+                            <p class="text-primary text-base font-bold leading-normal tracking-[0.015em]">Diario</p>
+                        </a>
+                        <a class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent pb-3"
+                            href="#">
+                            <p
+                                class="text-gray-500 dark:text-gray-400 text-base font-bold leading-normal tracking-[0.015em]">
+                                Semanal</p>
+                        </a>
+                    </div>
+                </div>
+                <!-- Challenge Cards List -->
+                <div class="flex flex-col gap-4 mt-4">
+                    <!-- Challenge Card 1 -->
+                    <div
+                        class="flex items-center gap-4 rounded-xl bg-card-light dark:bg-card-dark p-4 border border-border-light dark:border-border-dark shadow-sm">
+                        <div
+                            class="flex size-12 shrink-0 items-center justify-center rounded-full bg-accent/20 text-accent">
+                            <span class="material-symbols-outlined text-3xl">restaurant</span>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-text-light dark:text-text-dark text-base font-bold leading-normal">Lunes sin
+                                carne</h3>
+                            <div class="mt-2">
+                                <div
+                                    class="rounded-full bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark">
+                                    <div class="h-2 rounded-full bg-accent" style="width: 100%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <button
+                            class="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-white">
+                            <span class="material-symbols-outlined">done</span>
+                        </button>
+                    </div>
+                    <!-- Challenge Card 2 -->
+                    <div
+                        class="flex items-center gap-4 rounded-xl bg-card-light dark:bg-card-dark p-4 border border-border-light dark:border-border-dark shadow-sm">
+                        <div
+                            class="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
+                            <span class="material-symbols-outlined text-3xl">directions_walk</span>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-text-light dark:text-text-dark text-base font-bold leading-normal">Caminata
+                                de 30 min</h3>
+                            <div class="mt-2">
+                                <div
+                                    class="rounded-full bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark">
+                                    <div class="h-2 rounded-full bg-primary" style="width: 66%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <button
+                            class="flex size-10 shrink-0 items-center justify-center rounded-full border-2 border-primary text-primary bg-transparent">
+                            <span class="material-symbols-outlined">add</span>
+                        </button>
+                    </div>
+                    <!-- Challenge Card 3 -->
+                    <div
+                        class="flex items-center gap-4 rounded-xl bg-card-light dark:bg-card-dark p-4 border border-border-light dark:border-border-dark shadow-sm">
+                        <div
+                            class="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
+                            <span class="material-symbols-outlined text-3xl">shopping_bag</span>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-text-light dark:text-text-dark text-base font-bold leading-normal">Bolsa
+                                reutilizable</h3>
+                            <div class="mt-2">
+                                <div
+                                    class="rounded-full bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark">
+                                    <div class="h-2 rounded-full bg-primary" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <button
+                            class="flex size-10 shrink-0 items-center justify-center rounded-full border-2 border-primary text-primary bg-transparent">
+                            <span class="material-symbols-outlined">add</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- Quick Action Button (FAB) -->
+        <button
+            class="fixed bottom-24 right-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-white shadow-lg">
+            <span class="material-symbols-outlined text-4xl">add</span>
+        </button>
+        <!-- Bottom Navigation Bar -->
+        <nav
+            class="fixed bottom-0 left-0 right-0 flex justify-around border-t border-border-light dark:border-border-dark bg-card-light dark:bg-card-dark px-2 pt-2 pb-4 shadow-[0_-1px_3px_rgba(0,0,0,0.05)]">
+            <a class="flex flex-col items-center gap-1 text-primary w-20" href="#">
+                <span class="material-symbols-outlined">dashboard</span>
+                <span class="text-xs font-bold">Inicio</span>
+            </a>
+            <a class="flex flex-col items-center gap-1 text-gray-500 dark:text-gray-400 w-20" href="#">
+                <span class="material-symbols-outlined">emoji_events</span>
+                <span class="text-xs font-medium">Retos</span>
+            </a>
+            <a class="flex flex-col items-center gap-1 text-gray-500 dark:text-gray-400 w-20" href="#">
+                <span class="material-symbols-outlined">groups</span>
+                <span class="text-xs font-medium">Comunidad</span>
+            </a>
+            <a class="flex flex-col items-center gap-1 text-gray-500 dark:text-gray-400 w-20" href="#">
+                <span class="material-symbols-outlined">person</span>
+                <span class="text-xs font-medium">Perfil</span>
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        // Cargar nombre del usuario desde la sesión al iniciar la página
+        function cargarNombreUsuario() {
+            const sesion = localStorage.getItem('ecochallenge_sesion');
+
+            if (sesion) {
+                try {
+                    const usuario = JSON.parse(sesion);
+                    const nombre = usuario.nombre || 'Usuario';
+                    document.getElementById('nombreUsuario').textContent = '¡Hola, ' + nombre + '!';
+                } catch (error) {
+                    console.error('Error al parsear sesión:', error);
+                }
+            } else {
+                // Si no hay sesión, redirigir a login
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Cerrar sesión
+        function cerrarSesion() {
+            localStorage.removeItem('ecochallenge_sesion');
+            window.location.href = 'login.html';
+        }
+
+        // Ejecutar al cargar la página
+        document.addEventListener('DOMContentLoaded', function () {
+            cargarNombreUsuario();
+            document.getElementById('btnCerrarSesion').addEventListener('click', cerrarSesion);
+        });
+    </script>
+</body>
+
+</html>
