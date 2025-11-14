@@ -1,0 +1,206 @@
+<!DOCTYPE html
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mi impacto - EcoChallenge</title>
+<script src="_sessionCheck.js"></script>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#4CAF50",
+              "background-light": "#f6f8f6",
+              "background-dark": "#102212",
+            },
+            fontFamily: {
+              "display": ["Plus Jakarta Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+      }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#111812] dark:text-gray-200">
+<div class="relative w-full min-h-screen flex flex-col group/design-root overflow-x-hidden">
+<!-- Top App Bar -->
+<div class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-10">
+<h2 class="text-[#111812] dark:text-gray-50 text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">Mi impacto</h2>
+<button id="btnCerrarSesionTop" class="flex h-10 w-10 shrink-0 items-center justify-center text-[#111812] dark:text-gray-200 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg transition-colors" title="Cerrar sesión">
+<span class="material-symbols-outlined">logout</span>
+</button>
+</div>
+</div>
+<!-- Segmented Buttons -->
+<div class="flex px-4 py-3">
+<div class="flex h-10 flex-1 items-center justify-center rounded-lg bg-[#e8eae8] dark:bg-gray-800 p-1">
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-md px-2 has-[:checked]:bg-white dark:has-[:checked]:bg-gray-700 has-[:checked]:shadow-[0_1px_3px_rgba(0,0,0,0.1)] has-[:checked]:text-[#111812] dark:has-[:checked]:text-white text-[#618965] dark:text-gray-400 text-sm font-medium leading-normal transition-all duration-200">
+<span class="truncate">Esta semana</span>
+<input class="invisible w-0" name="impact-period" type="radio" value="This Week"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-md px-2 has-[:checked]:bg-white dark:has-[:checked]:bg-gray-700 has-[:checked]:shadow-[0_1px_3px_rgba(0,0,0,0.1)] has-[:checked]:text-[#111812] dark:has-[:checked]:text-white text-[#618965] dark:text-gray-400 text-sm font-medium leading-normal transition-all duration-200">
+<span class="truncate">Este mes</span>
+<input class="invisible w-0" name="impact-period" type="radio" value="This Month"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-md px-2 has-[:checked]:bg-white dark:has-[:checked]:bg-gray-700 has-[:checked]:shadow-[0_1px_3px_rgba(0,0,0,0.1)] has-[:checked]:text-[#111812] dark:has-[:checked]:text-white text-[#618965] dark:text-gray-400 text-sm font-medium leading-normal transition-all duration-200">
+<span class="truncate">Todo el tiempo</span>
+<input checked="" class="invisible w-0" name="impact-period" type="radio" value="All Time"/>
+</label>
+</div>
+</div>
+<!-- Stats -->
+<div class="flex flex-wrap gap-3 p-4">
+<div class="flex min-w-[158px] flex-1 flex-col gap-2 rounded-xl p-4 border border-[#dbe6dc] dark:border-gray-700 bg-white dark:bg-gray-800">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">co2</span>
+<p class="text-[#111812] dark:text-gray-300 text-sm font-medium leading-normal">CO2 ahorrado (kg)</p>
+</div>
+<p class="text-[#111812] dark:text-white tracking-light text-3xl font-bold leading-tight">1,204</p>
+</div>
+<div class="flex min-w-[158px] flex-1 flex-col gap-2 rounded-xl p-4 border border-[#dbe6dc] dark:border-gray-700 bg-white dark:bg-gray-800">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">park</span>
+<p class="text-[#111812] dark:text-gray-300 text-sm font-medium leading-normal">Árboles plantados</p>
+</div>
+<p class="text-[#111812] dark:text-white tracking-light text-3xl font-bold leading-tight">86</p>
+</div>
+<div class="flex min-w-[158px] flex-1 flex-col gap-2 rounded-xl p-4 border border-[#dbe6dc] dark:border-gray-700 bg-white dark:bg-gray-800">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">water_drop</span>
+<p class="text-[#111812] dark:text-gray-300 text-sm font-medium leading-normal">Agua ahorrada (L)</p>
+</div>
+<p class="text-[#111812] dark:text-white tracking-light text-3xl font-bold leading-tight">5,300</p>
+</div>
+<div class="flex min-w-[158px] flex-1 flex-col gap-2 rounded-xl p-4 border border-[#dbe6dc] dark:border-gray-700 bg-white dark:bg-gray-800">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">recycling</span>
+<p class="text-[#111812] dark:text-gray-300 text-sm font-medium leading-normal">Residuos desviados (kg)</p>
+</div>
+<p class="text-[#111812] dark:text-white tracking-light text-3xl font-bold leading-tight">450</p>
+</div>
+</div>
+<!-- Section Header -->
+<h3 class="text-[#111812] dark:text-gray-50 text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">Mi colección de insignias</h3>
+<!-- Image Grid -->
+<div class="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-3 px-4 pb-24">
+<div class="flex flex-col gap-2 text-center pb-3">
+<div class="px-4">
+<div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-full" data-alt="Golden medal with a green recycling symbol" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDf8THw7425E4CizTXyFs3WZx7D_dRZ3-ceXG7H8E-ZtEOjiyEVci-bk0-sGCMz_-1CxrN6imwsx4kJpGFHK_QdAk1FROROUwFXillpRC_uEiljJ9jTFMZ198Rsz44dG28rK9DawXc0ANejXvEhvEpIUZoQkjsn5bwCKfgw3f6WHEqVpHmC16mE16vetSjSzi-RPNaV_ptseS42__qlZpCCbljgByFoIxtJ3NjB-717JgGzSGowyAdQ9_tEN62sT4oHMoZMNeB-DYAr");'></div>
+</div>
+<div>
+<p class="text-[#111812] dark:text-gray-200 text-base font-medium leading-normal">Novato del reciclaje</p>
+<p class="text-primary text-sm font-normal leading-normal">Obtenida</p>
+</div>
+</div>
+<div class="flex flex-col gap-2 text-center pb-3">
+<div class="px-4">
+<div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-full" data-alt="Golden medal with a green bicycle" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCjF4tx84MmsmPHLgE7woG5brWm49Qm81rYTWwE4SOBrwDQFlRPeRnJaeyYoy6TP_hIA9GJ39SgfNZ-c2rgKbws-GPZBr6bYI67rG1nD0QQ9amwPiLjYxhds1CGTVSFJV-lkxCl_6KZMW4SDkm3qZRovb01Pqoha_KMUBxctieoMaXNdKaP7KRM9sQpsbyzYKSNxt7bpX_uyQp838RtJ6a5a4ZXqdiuB9Hmtorl1W6g_2Uut5A8Gr9MkuANSYUlFQ-Jp8_ITGfbF8M4");'></div>
+</div>
+<div>
+<p class="text-[#111812] dark:text-gray-200 text-base font-medium leading-normal">Campeón de desplazamiento</p>
+<p class="text-primary text-sm font-normal leading-normal">Obtenida</p>
+</div>
+</div>
+<div class="flex flex-col gap-2 text-center pb-3">
+<div class="px-4">
+<div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-full" data-alt="Golden medal with a green lightbulb and leaf" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA_1tYjw0wJWzBVl6tCBoKHUP0ntubrjC9q17Jds2ujbIviqiYQ-9La6hu-GK9Q0xYPyNxJTT2tJkT7TYRHZqn6MTCTjFn9xzKeswI23o_ZOrFzAKyVo2Z6NmigTDeVp0e8nY_wwjxnb0Jm3x7dXBC9Wzl-oaMuwBEp9DcLyWNdlL7r6Hps5Dt2yyI4NvbrVk7lio5IlVzz-wJFtxOzBs-Y0XLZTE51MGk3Gvfbj9Wq5GbMGlQd0cVPUqh5__VpOA-jxLmaNHWJK_I1");'></div>
+</div>
+<div>
+<p class="text-[#111812] dark:text-gray-200 text-base font-medium leading-normal">Ahorrador de energía</p>
+<p class="text-primary text-sm font-normal leading-normal">Obtenida</p>
+</div>
+</div>
+<div class="flex flex-col gap-2 text-center pb-3">
+<div class="px-4">
+<div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-full" data-alt="Golden medal with a green compost bin" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDMTZILHcs9LdvWQQDGWHl8DGUB49bposi-olu5RbXFBoCr3mHgNIR6dNwr58hfORKO2KPjLVHQiDU8vMSMpNgkO-kADa9okVqvfI_2722gaOZCpaDk1jR6k3yQuhHXLQZBdBIeZhsBe2-tJaDwKiEU3avlrO3PfSUGW7FP2Pn6rYviJ5IGvbZ2j_8RMM1iHZSy1qkDEfKUVJSrMPlSrlzGqWXciC_7hc6xl6wJe8vOGy-AR6gGRLY6Jh4Q4uA9awWUWQuPFfvtrebZ");'></div>
+</div>
+<div>
+<p class="text-[#111812] dark:text-gray-200 text-base font-medium leading-normal">Héroe cero residuos</p>
+<p class="text-primary text-sm font-normal leading-normal">Obtenida</p>
+</div>
+</div>
+<div class="flex flex-col gap-2 text-center pb-3 opacity-60">
+<div class="px-4 relative">
+<div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-full filter grayscale" data-alt="A greyed out medal with a water drop" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB1-tQ3c7SCi9FpTucB-H2ERbEWONpZ84PytHahmFd40zpBfoDAL3cZsUvH7e4Yy7UTvGmlguCVYrxomRyBxKwUdgGNV7WoAnkHe97ledalvAynQpCvwCLQY1fgIZCL9E5Ml5cqmP4iwit2LcFPX71vA0P_7K78-CUfpTg5JAlONXV80GxzRSmbWZFTwGAndiVALbE9VrDEBVoFlNFLtY8__KFybtfN5spfWCwnSrZuZ8cbFwLhDumMySHJt40spJKgNnOgCm9_SkIV");'></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-white bg-black/40 rounded-full p-2" style="font-size: 32px;">lock</span>
+</div>
+</div>
+<div>
+<p class="text-[#111812] dark:text-gray-200 text-base font-medium leading-normal">Guardián del agua</p>
+<p class="text-[#618965] dark:text-gray-400 text-sm font-normal leading-normal">Bloqueada</p>
+</div>
+</div>
+<div class="flex flex-col gap-2 text-center pb-3 opacity-60">
+<div class="px-4 relative">
+<div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-full filter grayscale" data-alt="A greyed out medal with a green planet earth" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDbI2HS8dXatxa0tqUOAH74SP8LxxgPCanOm_lUjgAgvFxVbpsxkE75eOJJsbagD2lN5mSHW9eAUqtHcEXtqPpGW0vIuguB67vmWiJU01ZTuK5y8VTc6WblkbrDsqBDfTExhXLF2dwgdKKU9-fQpHsUFRZFY_5IqOo7yOM03nzb_prUNRVKxHDCUrw28reV13ja8M9n6eBWyDoMwFNP-6E1uynXOUupZFGrjPwhh7BSl6ox6K_CPicWuqspakeadrgYgiur8kFFkevw");'></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-white bg-black/40 rounded-full p-2" style="font-size: 32px;">lock</span>
+</div>
+</div>
+<div>
+<p class="text-[#111812] dark:text-gray-200 text-base font-medium leading-normal">Guerrero ecológico</p>
+<p class="text-[#618965] dark:text-gray-400 text-sm font-normal leading-normal">Bloqueada</p>
+</div>
+</div>
+</div>
+<!-- Floating Action Button -->
+<div class="fixed bottom-24 right-6 z-20">
+<button class="flex items-center justify-center h-14 w-14 rounded-full bg-primary text-white shadow-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-background-dark">
+<span class="material-symbols-outlined" style="font-size: 28px;">share</span>
+</button>
+</div>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 flex justify-around border-t border-border-light dark:border-border-dark bg-card-light dark:bg-card-dark px-2 pt-2 pb-4 shadow-[0_-1px_3px_rgba(0,0,0,0.05)]">
+  <a class="flex flex-col items-center gap-1 text-gray-500 dark:text-gray-400 w-20 hover:text-primary transition-colors" href="dashboard.html">
+    <span class="material-symbols-outlined">dashboard</span>
+    <span class="text-xs font-medium">Inicio</span>
+  </a>
+  <a class="flex flex-col items-center gap-1 text-gray-500 dark:text-gray-400 w-20 hover:text-primary transition-colors" href="availablechallenges.html">
+    <span class="material-symbols-outlined">emoji_events</span>
+    <span class="text-xs font-medium">Retos</span>
+  </a>
+  <a class="flex flex-col items-center gap-1 text-gray-500 dark:text-gray-400 w-20 hover:text-primary transition-colors" href="community.html">
+    <span class="material-symbols-outlined">groups</span>
+    <span class="text-xs font-medium">Comunidad</span>
+  </a>
+  <a class="flex flex-col items-center gap-1 text-primary w-20" href="profile.html">
+    <span class="material-symbols-outlined">person</span>
+    <span class="text-xs font-bold">Perfil</span>
+  </a>
+</nav>
+
+<script>
+  function cerrarSesion() {
+    localStorage.removeItem('ecochallenge_sesion');
+    window.location.href = './login.html';
+  }
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    const btnCerrar = document.getElementById('btnCerrarSesionTop');
+    if (btnCerrar) {
+      btnCerrar.addEventListener('click', cerrarSesion);
+    }
+  });
+</script>
+
+</body></html>

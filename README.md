@@ -1,267 +1,66 @@
-**EcoChallenge — Proyecto académico (Ionic, prototipo web)**
+# EcoChallenge — Prototipo académico web + Capacitor
 
+EcoChallenge es un prototipo académico que combina una aplicación web estática (HTML, Tailwind CSS y JavaScript) con Capacitor para generar un APK Android. El objetivo principal es entregar el instalador generado por Android Studio, por lo que el flujo de desarrollo se centra en preparar correctamente la carpeta `build/` y empaquetarla desde Capacitor.
 
-**Tecnologías y prototipado**:
+## Tecnologías y arquitectura
+- Interfaz: HTML + CSS generadas a partir de Tailwind, sin frameworks ni bundlers especiales.
+- Lógica de datos: `back/simuladorLocal.js` simula un backend completo vía `localStorage`.
+- Navegación: las páginas en `front/` se comunican mediante redirecciones relativas y consumen el simulador.
+- Empaquetado móvil: Capacitor toma la carpeta `build/` como `webDir` y la pone dentro de `file:///android_asset/www/`, desde donde Android Studio construye el APK.
 
-**Estructura del proyecto** (archivos principales presentes)
+## Carpeta `build/`
+Esta carpeta debe contener la versión final que quieras publicar. Todo lo que está dentro se copia literalmente al proyecto nativo.
+- Confirma que `build/` incluye `index.html` y las carpetas `front/` y `back/` con sus scripts y assets.
+- No asumas rutas absolutas (como `/front/...`); usa rutas relativas porque WebView carga desde `file://`.
+- Cuando estés listo, ejecuta `npm run build` o la tarea que genere este contenido estático y verifica que los archivos estén sincronizados.
 
-**Alcance y consideraciones de arquitectura**:
+## Requisitos previos
+- Node.js y `npm` instalados.
+- Android Studio con SDK (incluye `platforms`, `build-tools`, etc.).
+- JDK instalado y `JAVA_HOME` apuntando a la carpeta del JDK.
+- En Windows, que el directorio `platform-tools` (donde está `adb`) esté en el `PATH`.
+- Tener configurado el proyecto web con un `package.json` válido y la carpeta `build/` decidida como salida.
 
-**Justificación**
-
-**Razón de ser de la aplicación**
-EcoChallenge surge como respuesta a la necesidad de transformar comportamientos individuales hacia la sostenibilidad ambiental en contextos urbanos. Bogotá enfrenta desafíos críticos en contaminación del aire, gestión de residuos y movilidad insostenible, lo que demanda intervenciones que combinen educación ambiental con motivación sostenida. La gamificación ofrece una estrategia efectiva para incrementar el compromiso de los usuarios, permitiendo que pequeñas acciones cotidianas se conviertan en hábitos permanentes mediante sistemas de puntos, insignias y rachas. De esta forma, la aplicación democratiza la sostenibilidad, haciéndola accesible, medible y gratificante para cualquier ciudadano.
-
-**Población objetivo**
-EcoChallenge está dirigida a ciudadanos bogotanos de todas las edades (principalmente entre 18 y 65 años) con acceso a dispositivos conectados a internet, independientemente de su nivel técnico o experiencia con aplicaciones móviles. El enfoque es inclusivo, buscando alcanzar tanto a usuarios conscientes del impacto ambiental como a aquellos que se sienten motivados por elementos lúdicos. La aplicación se diseña para ser intuitiva, permitiendo que usuarios sin experiencia técnica interactúen con ella sin dificultad.
-
-**Pertinencia del desarrollo**
-El desarrollo multiplataforma es esencial para maximizar el alcance e impacto de EcoChallenge. Bogotá presenta una diversidad significativa en dispositivos utilizados (smartphones, tablets y computadoras), sistemas operativos (iOS, Android, Windows) y contextos de uso. Una arquitectura multiplataforma elimina la necesidad de desarrollos paralelos, reduce costos de mantenimiento y garantiza una experiencia consistente. Esto resulta crítico para una aplicación con objetivos de impacto social, donde la accesibilidad universal es fundamental.
-
-**Ventajas del enfoque híbrido (Ionic)**
-Ionic es el framework ideal para EcoChallenge debido a sus ventajas inherentes al desarrollo híbrido: (1) compatibilidad simultánea con iOS, Android y web desde un único código base, reduciendo tiempos y costos de desarrollo; (2) capacidad de funcionar como PWA (Progressive Web Application), permitiendo instalación sin tienda de aplicaciones y funcionamiento offline; (3) acceso a APIs nativas del dispositivo (cámara, geolocalización, notificaciones) manteniendo la flexibilidad del desarrollo web; (4) comunidad activa y documentación completa; (5) desempeño optimizado para aplicaciones de baja a media complejidad como EcoChallenge. Estas características aseguran que la aplicación sea accesible, mantenible y escalable en el tiempo.
-
-**Trabajo grupal**
-Este proyecto se realiza de forma grupal (Subgrupo G7). Las decisiones de diseño, priorización de requisitos e implementación deben coordinarse dentro del equipo, distribuyendo tareas por áreas (diseño, UI, almacenamiento local, pruebas) y manteniendo control de versiones para facilitar la colaboración.
-
-- Registro / Inicio de Sesión → Acceso a la cuenta del usuario.
-- Menú Principal → Acceso a:
-  - Desafíos disponibles
-  - Progreso personal
-**EcoChallenge**
-
-Descripción técnica breve
-- Proyecto: prototipo de aplicación móvil multiplataforma. Interfaz y maquetas estáticas incluidas como referencia para migración a Ionic.
-- Objetivo técnico: mantener la aplicación con arquitectura standalone (procesamiento y almacenamiento local), priorizar navegación, usabilidad y mínimos funcionales.
-
-Stack y artefactos
-- Tecnologías: HTML, Tailwind CSS (prototipo visual). Objetivo de implementación: Ionic (Angular/React/Vue según preferencia del equipo).
-- Archivos principales (prototipo):
-  - `welcome.html` — Pantalla de entrada
-  - `login.html` — Inicio de sesión / registro
-  - `availablechallenges.html` — Lista de retos
-  - `challengedetails.html` — Detalle de reto
-  - `community.html` — Feed comunitario
-  - `profile.html` — Métricas e insignias
-  - `dashboard.html` — Panel de usuario
-
-Flujo de navegación (resumen)
-- Inicio → Iniciar sesión / Registrarse
-- Menú principal → Desafíos, Progreso, Insignias, Perfil
-- Desafíos → Lista filtrable → Vista detalle → Completar reto
-- Progreso → Visualizaciones (puntos, impacto acumulado)
-- Perfil → Configuración y cierre de sesión
-
-Cómo ejecutar el prototipo localmente
-- Desde WAMP: abrir `http://localhost/progmovil/welcome.html`.
-- Alternativa (PowerShell + Python):
+## Flujo básico para compilar en Android Studio
+1. Desde la raíz del proyecto, instala Capacitor si no se ha hecho y define el `webDir` que apunta a `build`:
   ```powershell
   cd C:\wamp64\www\poligran\progmovil
-  python -m http.server 5500
+  npm install @capacitor/core @capacitor/cli
+  npx cap init "EcoChallenge" "com.progmovil.ecochallenge" --web-dir build
+  npm run build
+  npx cap add android
+  npx cap copy
+  npx cap open android
   ```
-    Abrir `http://localhost:5500/welcome.html`.
+2. En Android Studio selecciona un dispositivo/emulador y usa `Run > Run 'app'` para un build debug.
+3. Para la entrega final selecciona `Build > Generate Signed Bundle / APK` y sigue el asistente para generar el firmante.
 
-## Arquitectura técnica: Backend simulado con localStorage
+> Nota: si ya ejecutaste `npx cap init` antes, asegúrate de que `capacitor.config.json` contiene `webDir: "build"` y que tus archivos están actualizados antes de correr `npx cap copy`.
 
-### Estructura de almacenamiento
+## Preparar tu proyecto web
+- Ejecuta `npm run build` o el comando que deje el sitio listo dentro de `build/`.
+- Asegúrate de que `package.json` documenta las dependencias necesarias para ese build.
+- Verifica que las rutas a CSS, scripts, JSON y `front/*.html` usen rutas relativas que funcionen bajo `file:///android_asset/www/`.
+- Cada vez que cambies el contenido web, vuelve a ejecutar `npm run build` y luego `npx cap copy` para sincronizar el nativo.
 
-El backend está completamente simulado en el navegador utilizando la API `localStorage` de JavaScript. No requiere servidor externo.
+## Entrega académica
+- El entregable esperado es el APK firmado que se obtiene desde Android Studio.
+- Conserva el prototipo web en esta carpeta y usa el control de versiones para documentar qué archivos se vieron afectados antes de empaquetar.
+- Comunica al equipo qué pasos seguir cuando sea necesario regenerar el APK (build web + Capacitor + Android Studio).
 
-**Clave de almacenamiento principal**: `ecochallenge_db_v1`
+## Estructura y backend simulado
+- El contenido web vive en `build/`, pero el backend corre completamente en el navegador mediante `localStorage`.
+- La clave principal es `ecochallenge_db_v1`, que guarda arrays de retos y usuarios; cada sesión se refleja en `ecochallenge_sesion`.
+- Las funciones de `back/simuladorLocal.js` exponen CRUD completos para retos y usuarios, incluyendo autenticación, registro y actualización de perfiles.
+- Este simulador se configura como objeto global (`window.simuladorLocal`) para que `front/app.js` y cada página puedan llamarlo directamente.
 
-```json
-{
-  "retos": [
-    {
-      "id": "r1",
-      "titulo": "Lunes sin carne",
-      "descripcion": "Evita consumir carne un día a la semana",
-      "categoria": "Alimentación",
-      "puntos": 50,
-      "completado": false,
-      "fechaCreacion": "2025-01-01T10:00:00Z"
-    }
-  ],
-  "usuarios": [
-    {
-      "id": "u1",
-      "nombre": "Juan Pérez",
-      "email": "juan@ecochallenge.com",
-      "password": "hashedPassword123",
-      "fechaRegistro": "2025-01-01T10:00:00Z",
-      "puntosTotales": 350,
-      "retosCompletados": ["r1", "r3"]
-    }
-  ]
-}
-```
+### Flujo típico del simulador
+1. `localStorage` inicializa `ecochallenge_db_v1` con la estructura base si no existe.
+2. La navegación entre `dashboard.html`, `community.html`, `availablechallenges.html` y otras páginas depende de datos cargados desde el simulador.
+3. Las páginas incluyen `_sessionCheck.js` para validar sesión y redirigir a `./login.html` si no hay usuario activo.
+4. Las acciones de login/registro guardan la sesión en `localStorage['ecochallenge_sesion']`, que luego se usa para llenar nombres, puntos e insignias en la interfaz.
 
-**Sesión de usuario activa**: `ecochallenge_sesion`
-- Se guarda cuando el usuario inicia sesión o se registra
-- Contiene los datos del usuario actual (nombre, email, puntos, etc.)
-- Se utiliza para llenar dinámicamente interfaces como el dashboard
-
----
-
-### Archivo: `back/simuladorLocal.js`
-
-**Propósito**: Capa CRUD (Create, Read, Update, Delete) que gestiona toda la lógica de datos.
-
-**Funciones principales**:
-
-#### Inicialización
-```javascript
-function inicializarBaseDatos()
-```
-- Crea la estructura JSON inicial si no existe
-- Se ejecuta automáticamente al cargar la página
-- Clave: `ecochallenge_db_v1`
-
-#### Retos (Challenges)
-```javascript
-function obtenerTodosRetos()              // Retorna array de todos los retos
-function obtenerRetoPorId(id)             // Retorna un reto específico
-function crearReto(reto)                  // Crea nuevo reto, retorna {error} o {id, ...}
-function actualizarReto(id, cambios)      // Actualiza campos de un reto
-function eliminarReto(id)                 // Elimina un reto
-function buscarPorCampo(campo, valor)     // Búsqueda genérica
-```
-
-#### Usuarios (Users & Authentication)
-```javascript
-function obtenerTodosUsuarios()           // Retorna array de todos los usuarios
-function obtenerUsuarioPorEmail(email)    // Búsqueda de usuario por correo
-function crearUsuario(usuario)            // Registra nuevo usuario
-  // Parámetros: {nombre, email, password}
-  // Retorna: {error: "..."} o {id, nombre, email, ...}
-function autenticarUsuario(email, password) // Valida credenciales
-  // Retorna: {error: "..."} o {success: true, usuario: {...}}
-function actualizarUsuario(id, cambios)   // Actualiza perfil de usuario
-```
-
-**Características de seguridad (educativas)**:
-- Validación de email único (no permite duplicados)
-- Validación de contraseña mínimo 6 caracteres
-- Las contraseñas se guardan en texto plano (⚠️ **solo para fines educativos**)
-- Manejo de errores con mensajes claros
-
-**Exposición global**:
-```javascript
-window.simuladorLocal = {
-  inicializarBaseDatos,
-  obtenerTodosRetos,
-  obtenerRetoPorId,
-  // ... (14 funciones disponibles globalmente)
-}
-```
-
----
-
-### Archivo: `front/app.js`
-
-**Propósito**: Capa de integración entre la UI (HTML) y la lógica de datos (`simuladorLocal.js`).
-
-**Funciones principales**:
-
-#### Gestión de sesión
-```javascript
-function guardarSesion(usuario)           // Guarda sesión en localStorage['ecochallenge_sesion']
-function obtenerUsuarioActual()           // Lee usuario actual desde la sesión
-function cerrarSesion()                   // Limpia sesión y redirige a login
-```
-
-#### Carga de datos en UI
-```javascript
-function cargarRetosDisponibles()         // Obtiene retos y llena #lista-retos
-function cargarPerfilUsuario()            // Carga datos del usuario en el dashboard
-```
-
-#### Flujos de ejemplo
-```javascript
-function ejemploCrearUsuario()            // Función de prueba en consola
-```
-
-**Patrón de uso**:
-1. HTML carga `simuladorLocal.js` primero
-2. HTML carga `app.js` segundo
-3. Al hacer `DOMContentLoaded`, se ejecutan funciones como `cargarRetosDisponibles()`
-
----
-
-### Archivo: `front/login.html`
-
-**Propósito**: Interfaz de autenticación con toggle entre login y registro.
-
-**Lógica JavaScript embebida**:
-
-#### Cambio de modo (Login ↔ Registro)
-```javascript
-function cambiarModo(modo)
-  // modo = 'login' o 'registro'
-  // Muestra/oculta campos condicionalmente
-  // Actualiza texto del botón
-```
-
-#### Procesamiento de autenticación
-```javascript
-function procesarAuth(event)
-  // Delegador que decide si hacer login o registro
-
-function autenticarUsuario(email, password)
-  // Llama a simuladorLocal.autenticarUsuario()
-  // Si éxito: guarda sesión y redirige a dashborad.html
-  // Si error: muestra mensaje de error
-
-function registrarUsuario(nombre, email, password)
-  // Llama a simuladorLocal.crearUsuario()
-  // Si éxito: guarda sesión automáticamente y redirige
-  // Si error: muestra validaciones
-```
-
-#### Utilidades
-```javascript
-function togglePasswordVisibility()       // Muestra/oculta contraseña
-function mostrarMensaje(texto, tipo)      // Muestra error/éxito con estilos
-function limpiarMensaje()                 // Limpia mensajes
-```
-
----
-
-### Archivo: `front/dashboard.html`
-
-**Propósito**: Panel de usuario que muestra progreso y retos personales.
-
-**Lógica JavaScript embebida**:
-
-```javascript
-function cargarNombreUsuario()
-  // Lee sesión desde localStorage['ecochallenge_sesion']
-  // Actualiza #nombreUsuario con el nombre real
-  // Si no hay sesión, redirige a login.html
-
-function cerrarSesion()
-  // Elimina localStorage['ecochallenge_sesion']
-  // Redirige a login.html
-```
-
----
-
-### Flujo completo de una operación
-
-**Ejemplo: Usuario se registra**
-
-1. Usuario abre `login.html`
-2. Hace clic en tab "Registrarse"
-3. `cambiarModo('registro')` muestra campo de nombre
-4. Usuario llena: nombre, email, contraseña
-5. Submit → `procesarAuth(event)` → `registrarUsuario()`
-6. `registrarUsuario()` → `simuladorLocal.crearUsuario()`
-7. `simuladorLocal.js`:
-   - Valida email único
-   - Valida contraseña ≥ 6 caracteres
-   - Genera ID único y timestamp
-   - Guarda en `localStorage['ecochallenge_db_v1']`
-   - Retorna usuario creado
-8. En `login.html`: `guardarSesion(usuario)` → almacena en `localStorage['ecochallenge_sesion']`
-9. Redirige a `dashborad.html`
-10. `dashboard.html` ejecuta `cargarNombreUsuario()` → lee sesión → actualiza greeting
+### Consideraciones de mantenimiento
+- Evita rutas absolutas dentro de HTML, scripts o `fetch`; usa rutas relativas (por ejemplo `./login.html` o `../back/simuladorLocal.js`).
+- Cada cambio en la carpeta `front/` o `back/` debe reflejarse en `build/` antes de ejecutar `npx cap copy`.
+- Documenta en este README cualquier cambio relevante en la estructura o en las dependencias del simulador local.

@@ -1,0 +1,31 @@
+{
+  "retos": [
+    {
+      "id": "r1",
+      "titulo": "Lunes sin carne",
+      "categoria": "alimentacion",
+      "puntos": 50,
+      "completado": false,
+      "fechaCreacion": "2025-11-01"
+    },
+    {
+      "id": "r2",
+      "titulo": "Ir en bicicleta",
+      "categoria": "movilidad",
+      "puntos": 30,
+      "completado": false,
+      "fechaCreacion": "2025-11-02"
+    }
+  ],
+  "usuarios": [
+    {
+      "id": "u1",
+      "nombre": "Usuario Demo",
+      "email": "demo@ecochallenge.com",
+      "password": "demo123",
+      "fechaRegistro": "2025-11-01T00:00:00.000Z",
+      "puntosTotales": 0,
+      "retosCompletados": []
+    }
+  ]
+}
