@@ -59,11 +59,9 @@
 <span class="material-symbols-outlined text-text-light dark:text-text-dark text-[28px]">spa</span>
 </div>
 <h2 class="text-text-light dark:text-text-dark text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">Comunidad</h2>
-<div class="flex w-12 items-center justify-end">
-<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 bg-transparent text-text-light dark:text-text-dark gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 p-0">
-<span class="material-symbols-outlined text-text-light dark:text-text-dark">search</span>
+<button id="btnCerrarSesionTop" class="flex h-10 w-10 shrink-0 items-center justify-center text-text-light dark:text-text-dark hover:bg-black/5 dark:hover:bg-white/5 rounded-lg transition-colors" title="Cerrar sesión">
+<span class="material-symbols-outlined">logout</span>
 </button>
-</div>
 </div>
 <!-- Tabs -->
 <div class="sticky top-[72px] z-10 bg-surface-light dark:bg-surface-dark pb-3">
@@ -177,5 +175,19 @@
     <span class="text-xs font-medium">Perfil</span>
   </a>
 </nav>
-</div>
+
+<script>
+  function cerrarSesion() {
+    localStorage.removeItem('ecochallenge_sesion');
+    window.location.href = 'login.html';
+  }
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    const btnCerrar = document.getElementById('btnCerrarSesionTop');
+    if (btnCerrar) {
+      btnCerrar.addEventListener('click', cerrarSesion);
+    }
+  });
+</script>
+
 </body></html>

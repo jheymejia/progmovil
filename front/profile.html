@@ -44,12 +44,10 @@
 <div class="relative w-full min-h-screen flex flex-col group/design-root overflow-x-hidden">
 <!-- Top App Bar -->
 <div class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-10">
-<div class="flex size-12 shrink-0 items-center justify-start">
-<span class="material-symbols-outlined text-[#111812] dark:text-gray-200" style="font-size: 24px;">arrow_back</span>
-</div>
 <h2 class="text-[#111812] dark:text-gray-50 text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">Mi impacto</h2>
-<div class="flex size-12 shrink-0 items-center justify-end">
-<img class="h-10 w-10 rounded-full" data-alt="User profile avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIblaMCuoBa8xcLmuFIC9d13m4sOKOr_hAgsnJIjXxN6VJlXQhYLHruqSDeRpyrx5Tb2zyA6hkFd4WiWQf_IM6BR5yvjIUeV0TdV6Hn5sRcqF8b0jjU-0w68h5psFlvO7M9SC5UvsLrq_dYDKmqkK7JO47y7eFDxSPXM9TscOeMh7Q-KZqbAenXdU5Ashabts2p7LuhTurtrROUMAl8JtyxL9urMuEaWxY3NA7S8736Ebz7KOLgxjyAxR0keeIp6Of6QTn_LsMIcIQ"/>
+<button id="btnCerrarSesionTop" class="flex h-10 w-10 shrink-0 items-center justify-center text-[#111812] dark:text-gray-200 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg transition-colors" title="Cerrar sesión">
+<span class="material-symbols-outlined">logout</span>
+</button>
 </div>
 </div>
 <!-- Segmented Buttons -->
@@ -190,5 +188,19 @@
     <span class="text-xs font-bold">Perfil</span>
   </a>
 </nav>
-</div>
+
+<script>
+  function cerrarSesion() {
+    localStorage.removeItem('ecochallenge_sesion');
+    window.location.href = 'login.html';
+  }
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    const btnCerrar = document.getElementById('btnCerrarSesionTop');
+    if (btnCerrar) {
+      btnCerrar.addEventListener('click', cerrarSesion);
+    }
+  });
+</script>
+
 </body></html>

@@ -60,18 +60,11 @@
 <body class="font-display bg-background-light dark:bg-background-dark">
 <div class="relative flex min-h-screen w-full flex-col">
 <header class="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm">
-<div class="flex items-center p-4 pb-2">
-<button class="mr-2 flex h-10 w-10 shrink-0 items-center justify-center text-text-light dark:text-text-dark">
-<span class="material-symbols-outlined">
-arrow_back
-</span>
-</button>
+<div class="flex items-center p-4 pb-2 justify-between">
 <h1 class="flex-1 text-center text-lg font-bold leading-tight tracking-[-0.015em] text-text-light dark:text-text-dark">Descubrir retos</h1>
-<div class="flex h-10 w-10 shrink-0 items-center justify-center text-text-light dark:text-text-dark">
-<span class="material-symbols-outlined">
-account_circle
-</span>
-</div>
+<button id="btnCerrarSesionTop" class="flex h-10 w-10 shrink-0 items-center justify-center text-text-light dark:text-text-dark hover:bg-black/5 dark:hover:bg-white/5 rounded-lg transition-colors" title="Cerrar sesión">
+<span class="material-symbols-outlined">logout</span>
+</button>
 </div>
 </header>
 <main class="flex-1 pb-24">
@@ -216,5 +209,19 @@ account_circle
   </a>
 </nav>
 </div>
+
+<script>
+  function cerrarSesion() {
+    localStorage.removeItem('ecochallenge_sesion');
+    window.location.href = 'login.html';
+  }
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    const btnCerrar = document.getElementById('btnCerrarSesionTop');
+    if (btnCerrar) {
+      btnCerrar.addEventListener('click', cerrarSesion);
+    }
+  });
+</script>
 
 </body></html>
