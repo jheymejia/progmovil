@@ -1,4 +1,5 @@
-<!DOCTYPE html <html class="light" lang="es">
+<!DOCTYPE html>
+<html class="light" lang="es">
 
 <head>
   <meta charset="utf-8" />
@@ -65,9 +66,9 @@
       flex: 1 1 auto;
     }
   </style>
-</head>
+  </head>
 
-<body class="bg-background-light dark:bg-background-dark font-display text-[#111812] dark:text-gray-200">
+  <body class="bg-background-light dark:bg-background-dark font-display text-[#111812] dark:text-gray-200">
   <div id="app" class="relative w-full min-h-screen flex flex-col group/design-root overflow-x-hidden">
     <div class="app-content">
       <!-- Top App Bar -->
@@ -234,8 +235,9 @@
     <!-- Floating Action Button -->
     <div class="fixed bottom-24 right-6 z-20">
       <button
-        class="flex items-center justify-center h-14 w-14 rounded-full bg-primary text-white shadow-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-background-dark">
-        <span class="material-symbols-outlined" style="font-size: 28px;">share</span>
+        class="flex h-16 w-16 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-primary text-white shadow-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-background-dark"
+        aria-label="Compartir progreso">
+        <span class="material-symbols-outlined text-4xl">share</span>
       </button>
     </div>
     <!-- Bottom Navigation Bar -->
@@ -291,6 +293,7 @@
       // Actualizar racha e insignias
       actualizarRachaInfo();
       renderizarInsignias();
+      renderizarStats();
       renderizarStats();
     }
 
@@ -367,24 +370,22 @@
       // Residuos desviados: 5 kg por reto
       const residuosDesviados = retosCompletados.length * 5;
 
-      // Actualizar DOM
-      const stats = document.querySelectorAll('.flex.min-w-\\[158px\\]');
-      if (stats.length >= 4) {
-        // Buscar por contenido
-        const textos = Array.from(stats).map(s => s.textContent);
+      // Actualizar DOM: buscar por contenido de cada stat
+      const statCards = document.querySelectorAll('.flex.min-w-\\[158px\\]');
+      statCards.forEach(card => {
+        const contenido = card.textContent;
+        const valorElement = card.querySelector('p:last-child');
         
-        textos.forEach((texto, idx) => {
-          if (texto.includes('CO2 ahorrado')) {
-            stats[idx].querySelector('p:last-child').textContent = co2Ahorrado + ' kg';
-          } else if (texto.includes('Árboles plantados')) {
-            stats[idx].querySelector('p:last-child').textContent = arbolesPlantados;
-          } else if (texto.includes('Agua ahorrada')) {
-            stats[idx].querySelector('p:last-child').textContent = aguaAhorrada + ' L';
-          } else if (texto.includes('Residuos desviados')) {
-            stats[idx].querySelector('p:last-child').textContent = residuosDesviados + ' kg';
-          }
-        });
-      }
+        if (contenido.includes('CO2 ahorrado')) {
+          valorElement.textContent = co2Ahorrado + ' kg';
+        } else if (contenido.includes('Árboles plantados')) {
+          valorElement.textContent = arbolesPlantados;
+        } else if (contenido.includes('Agua ahorrada')) {
+          valorElement.textContent = aguaAhorrada + ' L';
+        } else if (contenido.includes('Residuos desviados')) {
+          valorElement.textContent = residuosDesviados + ' kg';
+        }
+      });
     }
 
     function cerrarSesion() {
@@ -405,7 +406,6 @@
       }
     });
   </script>
-
-</body>
+  </body>
 
 </html>

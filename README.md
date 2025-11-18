@@ -1,116 +1,199 @@
-# EcoChallenge — Prototipo académico web + Capacitor
+# EcoChallenge – Aplicación móvil de hábitos sostenibles
 
-EcoChallenge es un prototipo académico que combina una aplicación web estática (HTML, Tailwind CSS y JavaScript) con Capacitor para generar un APK Android. El objetivo principal es entregar el instalador generado por Android Studio, por lo que el flujo de desarrollo se centra en preparar correctamente la carpeta `build/` y empaquetarla desde Capacitor.
+## Descripción del proyecto
 
-## Tecnologías y arquitectura
-- Interfaz: HTML + CSS generadas a partir de Tailwind, sin frameworks ni bundlers especiales.
-- Lógica de datos: `back/simuladorLocal.js` simula un backend completo vía `localStorage`.
-- Navegación: las páginas en `front/` se comunican mediante redirecciones relativas y consumen el simulador.
-- Empaquetado móvil: Capacitor toma la carpeta `build/` como `webDir` y la pone dentro de `file:///android_asset/www/`, desde donde Android Studio construye el APK.
+EcoChallenge es una aplicación móvil multiplataforma que promueve hábitos sostenibles entre ciudadanos mediante un sistema gamificado de desafíos ambientales. Los usuarios pueden registrar acciones ecológicas, acumular puntos, desbloquear insignias y mantener rachas de cumplimiento, visualizando su impacto individual.
 
-## Carpeta `build/`
-Esta carpeta debe contener la versión final que quieras publicar. Todo lo que está dentro se copia literalmente al proyecto nativo.
-- Confirma que `build/` incluye `index.html` y las carpetas `front/` y `back/` con sus scripts y assets.
-- No asumas rutas absolutas (como `/front/...`); usa rutas relativas porque WebView carga desde `file://`.
-- Cuando estés listo, ejecuta `npm run build` o la tarea que genere este contenido estático y verifica que los archivos estén sincronizados.
+La aplicación está implementada como una solución web estática (HTML5, Tailwind CSS y JavaScript) empaquetada con Capacitor para generar un APK funcional en Android. Todo el procesamiento y almacenamiento de datos ocurre localmente en el dispositivo mediante `localStorage`, sin requerir conexión a servicios externos.
+
+## Objetivos académicos
+
+### Objetivo general
+
+Desarrollar una aplicación multiplataforma empaquetada con Capacitor que fomente la adopción de hábitos sostenibles mediante desafíos gamificados, permitiendo el registro de progreso, visualización de impacto y mantenimiento de motivación a través de mecánicas interactivas.
+
+### Objetivos específicos
+
+- Implementar un sistema de desafíos organizados en categorías (movilidad, consumo, energía, residuos)
+- Desarrollar un motor de gamificación con puntos, insignias y rachas
+- Diseñar una interfaz mobile-first accesible y motivadora
+- Validar funcionamiento multiplataforma (Android, navegador)
+
+## Tecnologías utilizadas
+
+- **Frontend**: HTML5, Tailwind CSS, JavaScript
+- **Persistencia**: localStorage (claves: `ecochallenge_db_v1`, `ecochallenge_sesion`)
+- **Empaquetado móvil**: Capacitor
+- **Entorno de desarrollo**: Node.js, Android Studio
+
+## Decisiones técnicas importantes
+
+El equipo decidió no utilizar Ionic Framework (sugerido originalmente) por limitaciones de tiempo y complejidad del proyecto. En su lugar se implementó una solución con HTML5 estático que ofrece mayor control y simplicidad en el desarrollo.
+
+La aplicación no utiliza Service Workers en la versión empaquetada, ya que Capacitor carga los recursos desde `file://` en el WebView de Android, contexto incompatible con Service Workers. La funcionalidad offline se garantiza mediante `localStorage`.
+
+## Estructura del proyecto
+
+```
+progmovil/
+├── build/              # Carpeta de distribución (empaquetada por Capacitor)
+│   ├── front/         # Interfaces de usuario
+│   ├── back/          # Lógica y simulador local
+│   └── index.html     # Punto de entrada
+├── android/           # Proyecto nativo generado por Capacitor
+├── capacitor.config.json
+└── package.json
+```
 
 ## Requisitos previos
-- Node.js y `npm` instalados.
-- Android Studio con SDK (incluye `platforms`, `build-tools`, etc.).
-- JDK instalado y `JAVA_HOME` apuntando a la carpeta del JDK.
-- En Windows, que el directorio `platform-tools` (donde está `adb`) esté en el `PATH`.
-- Tener configurado el proyecto web con un `package.json` válido y la carpeta `build/` decidida como salida.
 
-## Flujo básico para compilar en Android Studio
-1. Desde la raíz del proyecto, instala Capacitor si no se ha hecho y define el `webDir` que apunta a `build`:
-  ```powershell
-  cd C:\wamp64\www\poligran\progmovil
-  npm install @capacitor/core @capacitor/cli
-  npx cap init "EcoChallenge" "com.progmovil.ecochallenge" --web-dir build
-  npm run build
-  npx cap add android
-  npx cap copy
-  npx cap open android
-  ```
-2. En Android Studio selecciona un dispositivo/emulador y usa `Run > Run 'app'` para un build debug.
-3. Para la entrega final selecciona `Build > Generate Signed Bundle / APK` y sigue el asistente para generar el firmante.
+- Node.js y npm instalados
+- Android Studio con SDK configurado
+- JDK instalado con `JAVA_HOME` configurado
+- Directorio `platform-tools` (donde está `adb`) en el PATH del sistema
 
-> Nota: si ya ejecutaste `npx cap init` antes, asegúrate de que `capacitor.config.json` contiene `webDir: "build"` y que tus archivos están actualizados antes de correr `npx cap copy`.
+## Instalación y configuración
 
-## Preparar tu proyecto web
-- Ejecuta `npm run build` o el comando que deje el sitio listo dentro de `build/`.
-  - `npm run build` — script placeholder: confirma que `build/` ya contiene los archivos listos.
-  - Para probar la aplicación web localmente, sirve la carpeta `build/` con un servidor estático y abre el sitio en el navegador. (Nota: las funcionalidades PWA/ServiceWorker fueron removidas de la versión APK empaquetada.)
-    ```powershell
-    cd C:\wamp64\www\poligran\progmovil\build
-    python -m http.server 5500
-    # o usando node:
-    npx http-server -p 5500
-    ```
-    Abre `http://localhost:5500/front/welcome.html` para probar la aplicación web localmente.
-- Asegúrate de que `package.json` documenta las dependencias necesarias para ese build.
-- Verifica que las rutas a CSS, scripts, JSON y `front/*.html` usen rutas relativas que funcionen bajo `file:///android_asset/www/`.
-- Cada vez que cambies el contenido web, vuelve a ejecutar `npm run build` y luego `npx cap copy` para sincronizar el nativo.
+### Configuración inicial del proyecto
 
-### Offline y Capacitor
-- Nota: Se removieron el `manifest.json` y el `service-worker.js` del `build/` por compatibilidad con el empaquetado en Android (Capacitor WebView usa `file://` y no ejecuta service workers). La aplicación dentro del APK usa `localStorage` para persistir datos y comportarse offline.
-- Si quieres probar PWA/Service Worker en un navegador durante desarrollo, sirve la carpeta `build/` con un servidor local (`http://localhost`) y sigue las instrucciones de prueba más arriba.
+```powershell
+cd C:\wamp64\www\poligran\progmovil
+npm install
+npm install @capacitor/core @capacitor/cli
+npx cap init "EcoChallenge" "com.progmovil.ecochallenge" --web-dir build
+```
 
-## Entrega académica
-- El entregable esperado es el APK firmado que se obtiene desde Android Studio.
-- Conserva el prototipo web en esta carpeta y usa el control de versiones para documentar qué archivos se vieron afectados antes de empaquetar.
-- Comunica al equipo qué pasos seguir cuando sea necesario regenerar el APK (build web + Capacitor + Android Studio).
+### Agregar plataforma Android
 
-## Estructura y backend simulado
-- El contenido web vive en `build/`, pero el backend corre completamente en el navegador mediante `localStorage`.
-- La clave principal es `ecochallenge_db_v1`, que guarda arrays de retos y usuarios; cada sesión se refleja en `ecochallenge_sesion`.
-- Las funciones de `back/simuladorLocal.js` exponen CRUD completos para retos y usuarios, incluyendo autenticación, registro y actualización de perfiles.
-- Este simulador se configura como objeto global (`window.simuladorLocal`) para que `front/app.js` y cada página puedan llamarlo directamente.
+```powershell
+npx cap add android
+```
 
-### Flujo típico del simulador
-1. `localStorage` inicializa `ecochallenge_db_v1` con la estructura base si no existe.
-2. La navegación entre `dashboard.html`, `community.html`, `availablechallenges.html` y otras páginas depende de datos cargados desde el simulador.
-3. Las páginas incluyen `_sessionCheck.js` para validar sesión y redirigir a `./login.html` si no hay usuario activo.
-4. Las acciones de login/registro guardan la sesión en `localStorage['ecochallenge_sesion']`, que luego se usa para llenar nombres, puntos e insignias en la interfaz.
+## Flujo de desarrollo
 
-### Consideraciones de mantenimiento
-- Evita rutas absolutas dentro de HTML, scripts o `fetch`; usa rutas relativas (por ejemplo `./login.html` o `../back/simuladorLocal.js`).
-- Cada cambio en la carpeta `front/` o `back/` debe reflejarse en `build/` antes de ejecutar `npx cap copy`.
- - Para sincronizar al proyecto nativo (Android) y luego abrir Android Studio ejecutar:
-   ```powershell
-   npm run prepare:android
-   npx cap open android
-   ```
-- Documenta en este README cualquier cambio relevante en la estructura o en las dependencias del simulador local.
+### Preparar el build web
 
-## Persistencia y datos de demostración
+Asegúrese de que la carpeta `build/` contiene todos los archivos necesarios:
 
-- **`localStorage` como base real**: la aplicación no usa un servidor ni una base de datos externa. Toda la información vive en `localStorage` bajo la clave `ecochallenge_db_v1`, que almacena un objeto con `retos`, `usuarios`, `insignias`, etc. Cada vez que `simuladorLocal.js` lee o escribe datos lo hace serializando/deserializando ese JSON completo.
-- **Sesiones y credenciales**: el usuario autenticado se guarda en `localStorage['ecochallenge_sesion']` (id, nombre, email, puntos, racha). Las contraseñas se comparan en texto plano dentro de `simuladorLocal.autenticarUsuario()` porque es un prototipo académico; no se aplican cifrados ni hash.
-- **`baseDatos.json`** solo existe como respaldo/manual en `build/back/`. Durante el runtime del APK no se lee automáticamente; sirve para copiar/pegar valores cuando necesitas reiniciar los datos en un entorno local de pruebas.
+```powershell
+npm run build
+```
 
-### Crear un usuario de demostración para el APK
+Este comando prepara el contenido estático que será empaquetado. Verifique que `build/` incluye `index.html` y las carpetas `front/` y `back/` con sus respectivos recursos.
 
-1. Abre cualquier página dentro de `build/front/` (por ejemplo `dashboard.html`) en el navegador o en un emulador.
-2. Abre la consola del navegador y ejecuta:
-   ```javascript
-   const demo = simuladorLocal.crearUsuario({
-     nombre: 'John Doe',
-     email: 'demo@poligran.edu.co',
-     password: 'Demo1234'
-   });
-   simuladorLocal.guardarSesion(demo);
-   simularRetos(demo.id);
-   ```
-   Donde `simularRetos` puede ser un pequeño helper que aceptes/completes unos retos para que la UI ya muestre progreso. Por ejemplo:
-   ```javascript
-   function simularRetos(userId) {
-     const todos = simuladorLocal.obtenerTodosRetos();
-     todos.slice(0, 3).forEach(r => simuladorLocal.aceptarReto(userId, r.id));
-     todos.slice(0, 2).forEach(r => simuladorLocal.completarReto(userId, r.id));
-   }
-   ```
-3. Cierra la consola. LocalStorage ya tiene el usuario y su sesión, así que podrás cerrar y abrir la app sin volver a ingresar los datos.
+### Sincronizar con Capacitor
 
-> Nota: `app-init.js` ya crea automáticamente a `demo@poligran.edu.co` con contraseña `Demo1234` y acepta/completa varios retos para que al abrir la app se vea progreso. Si deseas ejecutar el script manualmente, puedes hacerlo (por ejemplo para refrescar los datos) y en ese caso revisa que `localStorage['ecochallenge_demo_ready']` se borre para reactivar la rutina.
+Cada vez que realice cambios en el contenido web, debe sincronizar con el proyecto nativo:
 
+```powershell
+npx cap copy
+```
+
+### Abrir en Android Studio
+
+```powershell
+npx cap open android
+```
+
+En Android Studio:
+- Para pruebas: `Run > Run 'app'`
+- Para APK firmado: `Build > Generate Signed Bundle / APK`
+
+## Prueba local en navegador
+
+Para probar la aplicación web antes de empaquetar:
+
+```powershell
+cd build
+python -m http.server 5500
+# O alternativamente:
+npx http-server -p 5500
+```
+
+Abrir en el navegador: `http://localhost:5500/front/welcome.html`
+
+## Usuario de demostración
+
+La aplicación incluye un usuario preconfigurado para pruebas:
+
+- **Email**: demo@poligran.edu.co
+- **Contraseña**: Demo1234
+
+Este usuario cuenta con progreso precargado (retos aceptados y completados, puntos, insignias) para facilitar la evaluación de funcionalidades.
+
+## Funcionalidades implementadas
+
+### Requerimientos funcionales
+
+- Registro y autenticación de usuarios
+- Visualización, aceptación y completado de desafíos ambientales
+- Sistema de puntos y rachas
+- Desbloqueo de insignias
+- Gráficos de progreso (puntos semanales, distribución por categoría)
+- Filtrado de desafíos por categoría
+- Persistencia de sesión
+- Estadísticas de impacto (CO₂, agua, residuos)
+
+### Requerimientos no funcionales
+
+- Interfaz responsive y accesible
+- Funcionamiento offline mediante persistencia local
+- Tiempo de carga objetivo menor a 3 segundos
+- Código modular y documentado
+
+## Consideraciones para desarrollo
+
+### Rutas relativas
+
+El proyecto utiliza rutas relativas (`./` en lugar de `/`) para garantizar compatibilidad con el protocolo `file://` usado por Capacitor en Android. Ejemplo:
+
+```html
+<script src="./back/simuladorLocal.js"></script>
+<a href="./dashboard.html">Dashboard</a>
+```
+
+### Persistencia de datos
+
+El simulador local (`back/simuladorLocal.js`) gestiona toda la lógica mediante `localStorage`:
+
+- `ecochallenge_db_v1`: base de datos principal (retos, usuarios, insignias)
+- `ecochallenge_sesion`: sesión activa del usuario
+
+### Validación de sesión
+
+Las páginas protegidas incluyen `_sessionCheck.js` para validar la sesión activa y redirigir al login si es necesario.
+
+## Limitaciones conocidas
+
+- La autenticación utiliza comparación de contraseñas en texto plano (aceptable para prototipo académico)
+- No hay sincronización entre dispositivos (almacenamiento exclusivamente local)
+- Las funcionalidades PWA están deshabilitadas en la versión empaquetada
+
+## Entregables académicos
+
+### Entrega 1 (Completada)
+Diseño del proyecto y justificación de la arquitectura multiplataforma.
+
+### Entrega 2 (En progreso)
+Implementación funcional con navegación completa y al menos 70% de requisitos implementados. Incluye APK de prueba y documento de diseño actualizado.
+
+### Entrega 3 (Pendiente)
+Aplicación completa con análisis de monetización y preparación para publicación.
+
+## Comandos útiles
+
+```powershell
+# Preparar build y sincronizar con Android
+npm run build
+npx cap copy
+
+# Abrir proyecto en Android Studio
+npx cap open android
+
+# Comando combinado (si está configurado)
+npm run prepare:android
+```
+
+## Soporte y contacto
+
+Este proyecto es un prototipo académico desarrollado para el curso de Programación Móvil de la Institución Universitaria Politécnico Grancolombiano. Para consultas relacionadas con el desarrollo, consultar la documentación adicional en la carpeta `.docs/` o contactar al equipo de desarrollo.

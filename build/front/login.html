@@ -76,6 +76,7 @@
 <body class="bg-background-light dark:bg-background-dark font-display text-text-light dark:text-text-dark">
   <!-- Cargar simuladorLocal para acceso a CRUD -->
   <script src="../back/simuladorLocal.js"></script>
+  <script src="./app-init.js" defer></script>
   <div id="app"
     class="relative flex min-h-screen w-full flex-col items-center justify-center bg-background-light dark:bg-background-dark group/design-root overflow-x-hidden p-4">
     <!-- Background element -->
@@ -156,35 +157,11 @@
           form="formAuth"
           data-mode="login"
           class="flex h-14 w-full items-center justify-center rounded-lg bg-primary text-white text-base font-bold leading-normal shadow-md hover:bg-primary/90 transition-colors">Iniciar sesión</button>
-        <p class="text-xs text-muted-light dark:text-muted-dark mt-2">Usuario demo ya disponible: demo@poligran.edu.co / Demo1234 (recomendado para la demostración en vivo).</p>
+        <p class="text-xs text-muted-light dark:text-muted-dark mt-2">Usuario: demo@poligran.edu.co<br>Clave: Demo1234 </p>
       </div>
-      <!-- Social Login Divider (solo en login) -->
-      <div id="dividerSocial" class="flex items-center gap-4 px-4 py-6">
-        <div class="h-px flex-1 bg-border-light dark:bg-border-dark"></div>
-        <p class="text-sm font-medium text-muted-light dark:text-muted-dark">O continuar con</p>
-        <div class="h-px flex-1 bg-border-light dark:bg-border-dark"></div>
-      </div>
-      <!-- Social Login Buttons (solo en login) -->
-      <div id="socialButtons" class="px-4">
-        <button type="button"
-          class="flex h-14 w-full items-center justify-center gap-3 rounded-lg border border-border-light dark:border-border-dark bg-white/50 dark:bg-black/20 text-text-light dark:text-text-dark text-base font-medium leading-normal hover:bg-gray-100 dark:hover:bg-black/30 transition-colors">
-          <svg class="h-6 w-6" fill="none" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M22.578 12.27c0-.79-.07-1.54-.2-2.27h-9.77v4.28h5.68c-.24 1.38-.97 2.56-2.05 3.36v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.14z"
-              fill="#4285F4"></path>
-            <path
-              d="M12.608 23c3.24 0 5.95-1.08 7.93-2.91l-3.57-2.77c-1.08.72-2.45 1.16-4.36 1.16-3.36 0-6.2-2.26-7.22-5.3h-3.68v2.86c2.18 4.31 6.56 7.22 11.55 7.22z"
-              fill="#34A853"></path>
-            <path
-              d="M5.388 13.78c-.2-.6-.32-1.24-.32-1.91s.12-1.31.32-1.91V7.1H1.708c-.64 1.28-1.01 2.74-1.01 4.31s.37 3.03 1.01 4.31l3.68-2.86z"
-              fill="#FBBC05"></path>
-            <path
-              d="M12.608 4.52c1.76 0 3.34.6 4.6 1.83l3.16-3.16C18.558 1.12 15.848 0 12.608 0 7.618 0 3.238 2.91 1.058 7.22l3.68 2.86c1.02-3.04 3.86-5.3 7.87-5.3z"
-              fill="#EA4335"></path>
-          </svg>
-          Continuar con Google
-        </button>
-      </div>
+     
+    
+      
       <p class="text-xs text-muted-light dark:text-muted-dark text-center px-4 pt-6">Al continuar, aceptas nuestros <a
           class="text-secondary hover:underline" href="#">Términos de servicio</a> y la <a
           class="text-secondary hover:underline" href="#">Política de privacidad</a>.</p>

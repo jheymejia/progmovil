@@ -8,6 +8,7 @@
     <title>Panel de EcoChallenge</title>
     <!-- Cargar simuladorLocal antes de cualquier verificación -->
     <script src="../back/simuladorLocal.js"></script>
+    <script src="./app-init.js"></script>
     <script src="./_sessionCheck.js"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap"
@@ -19,7 +20,7 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#228B22",
+                        "primary": "#4CAF50",
                         "accent": "#7CFC00",
                         "background-light": "#F5F5F5",
                         "background-dark": "#102212",
@@ -81,16 +82,19 @@
         <header
             class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-10">
             <div class="flex items-center gap-3">
-                <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-12"
-                    data-alt="User profile picture of Alex"
-                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBckRmNjwoHB8qi10SojmfEtk65c9VeZCCDNV7DYyANNPYb6WX31rOLcUJsjdnqI1P5oi-i3vCbQ6Z2viIxscJzjC3Q9x3yfR6F6rfAIIHPfQbTyp9mlWSDM4BOrwONIA80tmJ7_vKFWX6lZAdJz-MJkFdpj30LXEAGGYgshU3vKnZcEzebl-vedq-uHYD7Op69qbobz6cuD-FhqLFHVYZb5B7t_Bl37_LwRgp3YwEo3c_6QUuYTm52LDYiIMEsvqUBiw8ucWF1W1Wq");'>
-                </div>
+                <a href="./profile.html" class="group/profile-link" aria-label="Ver perfil">
+                    <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-12 transition-shadow duration-200 group-hover/profile-link:shadow-lg"
+                        data-alt="User profile picture of Alex"
+                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBckRmNjwoHB8qi10SojmfEtk65c9VeZCCDNV7DYyANNPYb6WX31rOLcUJsjdnqI1P5oi-i3vCbQ6Z2viIxscJzjC3Q9x3yfR6F6rfAIIHPfQbTyp9mlWSDM4BOrwONIA80tmJ7_vKFWX6lZAdJz-MJkFdpj30LXEAGGYgshU3vKnZcEzebl-vedq-uHYD7Op69qbobz6cuD-FhqLFHVYZb5B7t_Bl37_LwRgp3YwEo3c_6QUuYTm52LDYiIMEsvqUBiw8ucWF1W1Wq");'>
+                    </div>
+                </a>
                 <h1 id="nombreUsuario"
                     class="text-text-light dark:text-text-dark text-2xl font-bold leading-tight tracking-[-0.015em]">
                     ¡Hola, Alex!</h1>
             </div>
-            <button class="text-text-light dark:text-text-dark">
+            <button id="btnNotificaciones" class="text-text-light dark:text-text-dark hover:bg-black/5 dark:hover:bg-white/5 p-2 rounded-lg transition-colors relative">
                 <span class="material-symbols-outlined text-3xl">notifications</span>
+                <span id="badgeNotif" class="absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">3</span>
             </button>
             <button id="btnCerrarSesion"
                 class="text-text-light dark:text-text-dark hover:bg-background-dark dark:hover:bg-white/10 p-2 rounded-lg transition-colors"
@@ -99,7 +103,7 @@
             </button>
         </header>
         <!-- Progress Summary Card -->
-        <main class="p-4 flex flex-col gap-6">
+        <main class="p-4 pb-32 flex flex-col gap-6">
             <div
                 class="flex flex-col gap-4 rounded-xl bg-card-light dark:bg-card-dark p-6 border border-border-light dark:border-border-dark shadow-sm">
                 <p class="text-text-light dark:text-text-dark text-base font-medium leading-normal">Puntuación de
@@ -216,82 +220,115 @@
                     </div>
                 </div>
                 <!-- Challenge Cards List -->
-                <div class="flex flex-col gap-4 mt-4">
-                    <!-- Challenge Card 1 -->
-                    <div
-                        class="flex items-center gap-4 rounded-xl bg-card-light dark:bg-card-dark p-4 border border-border-light dark:border-border-dark shadow-sm">
-                        <div
-                            class="flex size-12 shrink-0 items-center justify-center rounded-full bg-accent/20 text-accent">
-                            <span class="material-symbols-outlined text-3xl">restaurant</span>
-                        </div>
-                        <div class="flex-1">
-                            <h3 class="text-text-light dark:text-text-dark text-base font-bold leading-normal">Lunes sin
-                                carne</h3>
-                            <div class="mt-2">
-                                <div
-                                    class="rounded-full bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark">
-                                    <div class="h-2 rounded-full bg-accent" style="width: 100%;"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <button
-                            class="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-white">
-                            <span class="material-symbols-outlined">done</span>
+                <div class="flex flex-col gap-4 mt-4" id="retosUsuario">
+                    <!-- Los retos del usuario se cargarán dinámicamente aquí -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel de Notificaciones -->
+        <div id="panelNotificaciones" class="fixed inset-0 bg-black/50 z-50 hidden" onclick="cerrarNotificaciones()">
+            <div class="absolute top-0 right-0 w-full max-w-md h-full bg-card-light dark:bg-card-dark shadow-2xl transform transition-transform duration-300" onclick="event.stopPropagation()">
+                <div class="flex flex-col h-full">
+                    <!-- Header -->
+                    <div class="flex items-center justify-between p-4 border-b border-border-light dark:border-border-dark">
+                        <h2 class="text-text-light dark:text-text-dark text-xl font-bold">Notificaciones</h2>
+                        <button onclick="cerrarNotificaciones()" class="text-text-light dark:text-text-dark hover:bg-black/5 dark:hover:bg-white/5 p-2 rounded-lg">
+                            <span class="material-symbols-outlined">close</span>
                         </button>
                     </div>
-                    <!-- Challenge Card 2 -->
-                    <div
-                        class="flex items-center gap-4 rounded-xl bg-card-light dark:bg-card-dark p-4 border border-border-light dark:border-border-dark shadow-sm">
-                        <div
-                            class="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
-                            <span class="material-symbols-outlined text-3xl">directions_walk</span>
-                        </div>
-                        <div class="flex-1">
-                            <h3 class="text-text-light dark:text-text-dark text-base font-bold leading-normal">Caminata
-                                de 30 min</h3>
-                            <div class="mt-2">
-                                <div
-                                    class="rounded-full bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark">
-                                    <div class="h-2 rounded-full bg-primary" style="width: 66%;"></div>
+                    
+                    <!-- Lista de notificaciones -->
+                    <div class="flex-1 overflow-y-auto p-4 space-y-3">
+                        <!-- Notificación 1 -->
+                        <div class="flex gap-3 p-3 rounded-lg bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark hover:shadow-md transition-shadow cursor-pointer">
+                            <div class="flex-shrink-0">
+                                <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-primary">emoji_events</span>
                                 </div>
                             </div>
+                            <div class="flex-1">
+                                <p class="text-text-light dark:text-text-dark text-sm font-semibold">¡Nuevo reto disponible!</p>
+                                <p class="text-text-muted-light dark:text-text-muted-dark text-xs mt-1">Descubre el reto "Semana sin plástico" y gana 100 puntos</p>
+                                <p class="text-gray-400 text-xs mt-2">Hace 2 horas</p>
+                            </div>
                         </div>
-                        <button
-                            class="flex size-10 shrink-0 items-center justify-center rounded-full border-2 border-primary text-primary bg-transparent">
-                            <span class="material-symbols-outlined">add</span>
-                        </button>
+
+                        <!-- Notificación 2 -->
+                        <div class="flex gap-3 p-3 rounded-lg bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark hover:shadow-md transition-shadow cursor-pointer">
+                            <div class="flex-shrink-0">
+                                <div class="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-accent">workspace_premium</span>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-text-light dark:text-text-dark text-sm font-semibold">¡Insignia desbloqueada!</p>
+                                <p class="text-text-muted-light dark:text-text-muted-dark text-xs mt-1">Has obtenido la insignia "Eco Warrior" 🏆</p>
+                                <p class="text-gray-400 text-xs mt-2">Hace 5 horas</p>
+                            </div>
+                        </div>
+
+                        <!-- Notificación 3 -->
+                        <div class="flex gap-3 p-3 rounded-lg bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark hover:shadow-md transition-shadow cursor-pointer">
+                            <div class="flex-shrink-0">
+                                <div class="w-10 h-10 rounded-full bg-orange-100 dark:bg-orange-900/20 flex items-center justify-center">
+                                    <span class="text-2xl">🔥</span>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-text-light dark:text-text-dark text-sm font-semibold">¡Racha de 7 días!</p>
+                                <p class="text-text-muted-light dark:text-text-muted-dark text-xs mt-1">Mantén tu racha completando un reto hoy</p>
+                                <p class="text-gray-400 text-xs mt-2">Hace 1 día</p>
+                            </div>
+                        </div>
+
+                        <!-- Notificación 4 -->
+                        <div class="flex gap-3 p-3 rounded-lg bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark hover:shadow-md transition-shadow cursor-pointer opacity-60">
+                            <div class="flex-shrink-0">
+                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-gray-500">info</span>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-text-light dark:text-text-dark text-sm font-semibold">Actualización de la app</p>
+                                <p class="text-text-muted-light dark:text-text-muted-dark text-xs mt-1">Nueva versión disponible con mejoras de rendimiento</p>
+                                <p class="text-gray-400 text-xs mt-2">Hace 2 días</p>
+                            </div>
+                        </div>
+
+                        <!-- Notificación 5 -->
+                        <div class="flex gap-3 p-3 rounded-lg bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark hover:shadow-md transition-shadow cursor-pointer opacity-60">
+                            <div class="flex-shrink-0">
+                                <div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-blue-500">groups</span>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-text-light dark:text-text-dark text-sm font-semibold">Nuevo en la comunidad</p>
+                                <p class="text-text-muted-light dark:text-text-muted-dark text-xs mt-1">María completó el mismo reto que tú</p>
+                                <p class="text-gray-400 text-xs mt-2">Hace 3 días</p>
+                            </div>
+                        </div>
                     </div>
-                    <!-- Challenge Card 3 -->
-                    <div
-                        class="flex items-center gap-4 rounded-xl bg-card-light dark:bg-card-dark p-4 border border-border-light dark:border-border-dark shadow-sm">
-                        <div
-                            class="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
-                            <span class="material-symbols-outlined text-3xl">shopping_bag</span>
-                        </div>
-                        <div class="flex-1">
-                            <h3 class="text-text-light dark:text-text-dark text-base font-bold leading-normal">Bolsa
-                                reutilizable</h3>
-                            <div class="mt-2">
-                                <div
-                                    class="rounded-full bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark">
-                                    <div class="h-2 rounded-full bg-primary" style="width: 0%;"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <button
-                            class="flex size-10 shrink-0 items-center justify-center rounded-full border-2 border-primary text-primary bg-transparent">
-                            <span class="material-symbols-outlined">add</span>
+
+                    <!-- Footer -->
+                    <div class="p-4 border-t border-border-light dark:border-border-dark">
+                        <button onclick="marcarTodasLeidas()" class="w-full py-2 text-primary text-sm font-medium hover:bg-primary/10 rounded-lg transition-colors">
+                            Marcar todas como leídas
                         </button>
                     </div>
                 </div>
             </div>
-        </main>
         </div>
-        <!-- Quick Action Button (FAB) -->
-        <button
-            class="fixed bottom-24 right-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-white shadow-lg">
-            <span class="material-symbols-outlined text-4xl">add</span>
-        </button>
+
+        <!-- Floating Action Button -->
+        <div class="fixed bottom-24 right-6 z-20">
+          <button
+            class="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-white shadow-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-background-dark"
+            aria-label="Crear publicación">
+            <span class="material-symbols-outlined text-3xl">add</span>
+          </button>
+        </div>
         <!-- Bottom Navigation Bar -->
         <nav
             class="fixed bottom-0 left-0 right-0 flex justify-around border-t border-border-light dark:border-border-dark bg-card-light dark:bg-card-dark px-2 pt-2 pb-4 shadow-[0_-1px_3px_rgba(0,0,0,0.05)]">
@@ -353,6 +390,9 @@
                         const insigniasOb = (usuario.insignias && usuario.insignias.length) || 0;
                         document.getElementById('insigniaDisplay').textContent = insigniasOb + '/10';
                         
+                        // Cargar retos del usuario
+                        cargarRetosUsuario(usuario);
+                        
                         // Generar gráficos
                         generarGraficos(usuario);
                     }
@@ -362,6 +402,95 @@
             } else {
                 // Si no hay sesión, redirigir a login (ya lo hace _sessionCheck.js)
                 window.location.href = './login.html';
+            }
+        }
+
+        // Cargar retos aceptados del usuario
+        function cargarRetosUsuario(usuario) {
+            const container = document.getElementById('retosUsuario');
+            if (!container) return;
+
+            const retosAceptados = usuario.retosAceptados || [];
+            const retosCompletados = usuario.retosCompletados || [];
+            const todosRetos = simuladorLocal.obtenerTodosRetos();
+
+            // IDs de retos completados
+            const idsCompletados = retosCompletados.map(rc => rc.retoId);
+
+            container.innerHTML = '';
+
+            if (retosAceptados.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8">
+                        <p class="text-text-muted-light dark:text-text-muted-dark text-sm">No tienes retos aceptados</p>
+                        <a href="availablechallenges.html" class="text-primary text-sm font-medium hover:underline mt-2 inline-block">Explorar retos</a>
+                    </div>
+                `;
+                return;
+            }
+
+            // Mostrar solo los primeros 5 retos aceptados
+            const retosAMostrar = retosAceptados.slice(0, 5);
+
+            retosAMostrar.forEach((retoAceptado) => {
+                const reto = todosRetos.find(r => r.id === retoAceptado.retoId);
+                if (!reto) return;
+
+                const estaCompletado = idsCompletados.includes(reto.id);
+                const progreso = estaCompletado ? 100 : 0;
+
+                const iconos = {
+                    movilidad: 'directions_walk',
+                    consumo: 'shopping_bag',
+                    energia: 'bolt',
+                    residuos: 'recycling',
+                    alimentacion: 'restaurant'
+                };
+                const icono = iconos[reto.categoria] || 'eco';
+
+                const colorFondo = estaCompletado ? 'bg-accent/20 text-accent' : 'bg-primary/20 text-primary';
+                const btnHtml = estaCompletado 
+                    ? '<button class="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-white"><span class="material-symbols-outlined">done</span></button>'
+                    : `<button onclick="completarRetoDesdeCard('${reto.id}')" class="flex size-10 shrink-0 items-center justify-center rounded-full border-2 border-primary text-primary bg-transparent hover:bg-primary hover:text-white transition-colors"><span class="material-symbols-outlined">add</span></button>`;
+
+                const cardHtml = `
+                    <div class="flex items-center gap-4 rounded-xl bg-card-light dark:bg-card-dark p-4 border border-border-light dark:border-border-dark shadow-sm">
+                        <div class="flex size-12 shrink-0 items-center justify-center rounded-full ${colorFondo}">
+                            <span class="material-symbols-outlined text-3xl">${icono}</span>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-text-light dark:text-text-dark text-base font-bold leading-normal">${reto.titulo}</h3>
+                            <div class="mt-2">
+                                <div class="rounded-full bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark">
+                                    <div class="h-2 rounded-full ${estaCompletado ? 'bg-accent' : 'bg-primary'}" style="width: ${progreso}%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        ${btnHtml}
+                    </div>
+                `;
+
+                container.innerHTML += cardHtml;
+            });
+        }
+
+        // Completar reto desde el dashboard
+        function completarRetoDesdeCard(retoId) {
+            if (typeof simuladorLocal === 'undefined') return;
+
+            const sesion = simuladorLocal.obtenerSesion();
+            if (!sesion) {
+                window.location.href = './login.html';
+                return;
+            }
+
+            const resultado = simuladorLocal.completarReto(sesion.usuarioId, retoId);
+            
+            if (resultado.error) {
+                alert('Error: ' + resultado.error);
+            } else {
+                // Recargar datos
+                cargarDatosUsuario();
             }
         }
 
@@ -537,10 +666,45 @@
             window.location.href = './login.html';
         }
 
+        // Notificaciones
+        function abrirNotificaciones() {
+            const panel = document.getElementById('panelNotificaciones');
+            if (panel) {
+                panel.classList.remove('hidden');
+                // Ocultar badge
+                const badge = document.getElementById('badgeNotif');
+                if (badge) badge.classList.add('hidden');
+            }
+        }
+
+        function cerrarNotificaciones() {
+            const panel = document.getElementById('panelNotificaciones');
+            if (panel) {
+                panel.classList.add('hidden');
+            }
+        }
+
+        function marcarTodasLeidas() {
+            // Simular marcar como leídas - agregar opacidad a todas
+            const notifs = document.querySelectorAll('#panelNotificaciones .cursor-pointer');
+            notifs.forEach(n => n.classList.add('opacity-60'));
+            
+            // Opcional: cerrar el panel después
+            setTimeout(() => {
+                cerrarNotificaciones();
+            }, 500);
+        }
+
         // Ejecutar al cargar la página
         document.addEventListener('DOMContentLoaded', function () {
             cargarDatosUsuario();
             document.getElementById('btnCerrarSesion').addEventListener('click', cerrarSesion);
+            
+            // Evento para abrir notificaciones
+            const btnNotif = document.getElementById('btnNotificaciones');
+            if (btnNotif) {
+                btnNotif.addEventListener('click', abrirNotificaciones);
+            }
         });
     </script>
 </body>

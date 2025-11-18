@@ -57,7 +57,8 @@ function inicializarBaseDatos() {
   if (!localStorage.getItem(claveBaseDatos)) {
     const inicial = { 
       retos: retosDemo.map(r => ({ ...r, activo: true })),
-      usuarios: []
+      usuarios: [],
+      insignias: insigniasDemo
     };
     localStorage.setItem(claveBaseDatos, JSON.stringify(inicial));
   }
@@ -244,14 +245,15 @@ function aceptarReto(usuarioId, retoId) {
   return actualizarUsuario(usuarioId, usuario);
 }
 
-function completarReto(usuarioId, retoId) {
-  const usuario = obtenerUsuario(usuarioId);
+function completarReto(usuarioId, retoId, fechaOverride) {
+  let usuario = obtenerUsuario(usuarioId);
   if (!usuario) return { error: 'Usuario no encontrado' };
   
   const reto = obtenerRetoPorId(retoId);
   if (!reto) return { error: 'Reto no encontrado' };
   
-  const ahora = new Date();
+  // Permitir fijar la fecha para sembrar datos de demo/semana
+  const ahora = fechaOverride ? new Date(fechaOverride) : new Date();
   const hoy = ahora.toISOString().split('T')[0];
   
   // Verificar racha
@@ -301,10 +303,17 @@ function obtenerUsuario(id) {
 
 // ============ FUNCIONES DE INSIGNIAS Y RACHAS ============
 
+function obtenerTodasLasInsignias() {
+  const db = leerBaseDatos();
+  return db.insignias || [];
+}
+
 function verificarInsignias(usuario) {
   if (!usuario.insignias) usuario.insignias = [];
   
-  insigniasDemo.forEach(insig => {
+  const insigniasDisponibles = obtenerTodasLasInsignias();
+  
+  insigniasDisponibles.forEach(insig => {
     // Evitar duplicados
     if (usuario.insignias.find(i => i.id === insig.id)) return;
     
@@ -371,5 +380,6 @@ window.simuladorLocal = {
   aceptarReto,
   completarReto,
   // Insignias
-  verificarInsignias
+  verificarInsignias,
+  obtenerTodasLasInsignias
 };
