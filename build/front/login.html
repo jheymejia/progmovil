@@ -288,9 +288,9 @@
         mostrarMensaje('ERROR: ' + resultado.error, 'error');
       } else {
         mostrarMensaje('¡Bienvenido, ' + resultado.usuario.nombre + '!', 'success');
-        // Guardar sesión y redirigir después de 1.5s
+        // Guardar sesión usando simuladorLocal y redirigir después de 1.5s
         setTimeout(() => {
-          guardarSesion(resultado.usuario);
+          simuladorLocal.guardarSesion(resultado.usuario);
           window.location.href = './dashboard.html';
         }, 1500);
       }
@@ -314,9 +314,9 @@
         mostrarMensaje('ERROR: ' + resultado.error, 'error');
       } else {
         mostrarMensaje('¡Registro exitoso, ' + resultado.nombre + '! Iniciando sesión...', 'success');
-        // Guardar sesión y redirigir después de 1.5s
+        // Guardar sesión usando simuladorLocal y redirigir después de 1.5s
         setTimeout(() => {
-          guardarSesion(resultado);
+          simuladorLocal.guardarSesion(resultado);
           window.location.href = './dashboard.html';
         }, 1500);
       }

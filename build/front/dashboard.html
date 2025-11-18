@@ -6,6 +6,8 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Panel de EcoChallenge</title>
+    <!-- Cargar simuladorLocal antes de cualquier verificación -->
+    <script src="../back/simuladorLocal.js"></script>
     <script src="_sessionCheck.js"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap"
@@ -257,37 +259,48 @@
     <script>
         // Cargar datos del usuario desde la sesión
         function cargarDatosUsuario() {
-            const sesion = localStorage.getItem('ecochallenge_sesion');
+            // Verificar que simuladorLocal esté disponible
+            if (typeof simuladorLocal === 'undefined') {
+                setTimeout(cargarDatosUsuario, 100);
+                return;
+            }
+            
+            const sesion = simuladorLocal.obtenerSesion();
 
             if (sesion) {
                 try {
-                    const usuario = JSON.parse(sesion);
-                    const nombre = usuario.nombre || 'Usuario';
-                    document.getElementById('nombreUsuario').textContent = '¡Hola, ' + nombre + '!';
-                    
-                    // Cargar puntos totales
-                    const puntos = usuario.puntosTotales || 0;
-                    document.getElementById('puntosTotales').textContent = puntos.toLocaleString();
-                    
-                    // Cargar retos completados
-                    const retosCompletos = (usuario.retosCompletados && usuario.retosCompletados.length) || 0;
-                    document.getElementById('retosCompletados').textContent = retosCompletos;
-                    
-                    // Calcular CO2 ahorrado (estimación: 2 kg por reto completado)
-                    const co2 = retosCompletos * 2;
-                    document.getElementById('co2Ahorrado').textContent = co2 + ' kg';
+                    // Obtener usuario completo desde la BD
+                    const usuario = simuladorLocal.obtenerUsuario(sesion.usuarioId);
+                    if (usuario) {
+                        const nombre = usuario.nombre || 'Usuario';
+                        document.getElementById('nombreUsuario').textContent = '¡Hola, ' + nombre + '!';
+                        
+                        // Cargar puntos totales
+                        const puntos = usuario.puntosTotales || 0;
+                        document.getElementById('puntosTotales').textContent = puntos.toLocaleString();
+                        
+                        // Cargar retos completados
+                        const retosCompletos = (usuario.retosCompletados && usuario.retosCompletados.length) || 0;
+                        document.getElementById('retosCompletados').textContent = retosCompletos;
+                        
+                        // Calcular CO2 ahorrado (estimación: 2 kg por reto completado)
+                        const co2 = retosCompletos * 2;
+                        document.getElementById('co2Ahorrado').textContent = co2 + ' kg';
+                    }
                 } catch (error) {
-                    console.error('Error al parsear sesión:', error);
+                    console.error('Error al cargar datos del usuario:', error);
                 }
             } else {
-                // Si no hay sesión, redirigir a login
+                // Si no hay sesión, redirigir a login (ya lo hace _sessionCheck.js)
                 window.location.href = './login.html';
             }
         }
 
         // Cerrar sesión
         function cerrarSesion() {
-            localStorage.removeItem('ecochallenge_sesion');
+            if (typeof simuladorLocal !== 'undefined') {
+                simuladorLocal.limpiarSesion();
+            }
             window.location.href = './login.html';
         }
 
