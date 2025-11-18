@@ -81,29 +81,22 @@ function asegurarUsuarioDemo() {
 
   console.log('[EcoChallenge] Encontrados', retos.length, 'retos disponibles');
 
-  // Seleccionar retos para aceptar (primeros N)
-  const retosParaAceptar = retos.slice(0, Math.min(demoRetosAceptados, retos.length));
-  const retosParaCompletar = retos.slice(0, Math.min(demoRetosCompletados, retos.length));
-
-  // Aceptar retos
+  // Aceptar varios retos para poblar la sección "Mis retos"
+  const cantidadAceptar = Math.min(8, retos.length);
+  const retosParaAceptar = retos.slice(0, cantidadAceptar);
   console.log('[EcoChallenge] Aceptando', retosParaAceptar.length, 'retos...');
   retosParaAceptar.forEach((reto, idx) => {
-    const resultado = simuladorLocal.aceptarReto(usuario.id, reto.id);
-    if (resultado.error) {
-      console.warn(`[EcoChallenge] Error al aceptar reto ${idx + 1}:`, resultado.error);
+    const yaAceptado = (usuario.retosAceptados || []).some(r => r.retoId === reto.id);
+    if (!yaAceptado) {
+      const resultado = simuladorLocal.aceptarReto(usuario.id, reto.id);
+      if (resultado && resultado.error) {
+        console.warn(`[EcoChallenge] Error al aceptar reto ${idx + 1}:`, resultado.error);
+      }
     }
   });
 
-  // Completar retos (esto suma puntos, racha e insignias)
-  console.log('[EcoChallenge] Completando', retosParaCompletar.length, 'retos...');
-  retosParaCompletar.forEach((reto, idx) => {
-    const resultado = simuladorLocal.completarReto(usuario.id, reto.id);
-    if (resultado.error) {
-      console.warn(`[EcoChallenge] Error al completar reto ${idx + 1}:`, resultado.error);
-    } else {
-      console.log(`[EcoChallenge] Reto ${idx + 1} completado: +${reto.puntos} puntos`);
-    }
-  });
+  // Sembrar completados distribuidos en la semana y por categorías
+  sembrarSemanaDemo(usuario, retos);
 
   // Obtener usuario actualizado
   usuario = simuladorLocal.obtenerUsuario(usuario.id);
@@ -116,6 +109,73 @@ function asegurarUsuarioDemo() {
   }
 
   console.log('[EcoChallenge] ✓ Inicialización de usuario demo completada');
+}
+
+/**
+ * Sembrar datos de una semana: completar 5-7 retos con fechas de los últimos días
+ * cubriendo categorías diversas para que el dashboard se vea realista
+ */
+function sembrarSemanaDemo(usuario, retos) {
+  try {
+    const hoy = new Date();
+    const usados = new Set((usuario.retosCompletados || []).map(r => r.retoId));
+    const porCategoria = {
+      movilidad: retos.filter(r => r.categoria === 'movilidad'),
+      energia: retos.filter(r => r.categoria === 'energia'),
+      residuos: retos.filter(r => r.categoria === 'residuos'),
+      consumo: retos.filter(r => r.categoria === 'consumo')
+    };
+
+    // Asegurar al menos uno por categoría (si existe)
+    const categorias = ['movilidad', 'energia', 'residuos', 'consumo'];
+    let diaOffset = 1;
+    categorias.forEach(cat => {
+      const lista = porCategoria[cat] || [];
+      const candidato = lista.find(r => !usados.has(r.id));
+      if (candidato) {
+        // Asegurar aceptación previa
+        if (!usuario.retosAceptados || !usuario.retosAceptados.some(a => a.retoId === candidato.id)) {
+          simuladorLocal.aceptarReto(usuario.id, candidato.id);
+        }
+        const fecha = new Date(hoy);
+        fecha.setDate(hoy.getDate() - diaOffset);
+        const res = simuladorLocal.completarReto(usuario.id, candidato.id, fecha.toISOString());
+        if (res && res.error) {
+          console.warn('[EcoChallenge] Error al completar por categoría', cat, res.error);
+        } else {
+          usados.add(candidato.id);
+          diaOffset = Math.min(diaOffset + 1, 6);
+        }
+      }
+    });
+
+    // Completar extras hasta 6-7 retos en total distribuidos en la semana
+    const objetivo = 6;
+    for (let i = 0, contador = (usuario.retosCompletados || []).length; i < retos.length && contador < objetivo; i++) {
+      const r = retos[i];
+      if (usados.has(r.id)) continue;
+      if (!usuario.retosAceptados || !usuario.retosAceptados.some(a => a.retoId === r.id)) {
+        simuladorLocal.aceptarReto(usuario.id, r.id);
+      }
+      const fecha = new Date(hoy);
+      const offset = (i % 7);
+      fecha.setDate(hoy.getDate() - offset);
+      const res = simuladorLocal.completarReto(usuario.id, r.id, fecha.toISOString());
+      if (!res || !res.error) {
+        usados.add(r.id);
+        contador++;
+      }
+    }
+
+    // Refrescar usuario tras las operaciones
+    const actualizado = simuladorLocal.obtenerUsuario(usuario.id);
+    if (actualizado) {
+      simuladorLocal.guardarSesion(actualizado);
+      console.log('[EcoChallenge] Semana demo sembrada. Completados:', (actualizado.retosCompletados || []).length);
+    }
+  } catch (e) {
+    console.warn('[EcoChallenge] Error al sembrar semana demo:', e);
+  }
 }
 
 /**
