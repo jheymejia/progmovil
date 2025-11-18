@@ -136,16 +136,14 @@
 
     const retoId = obtenerIdRetoDelURL();
     if (!retoId) {
-      alert('Reto no encontrado');
-      window.history.back();
+      mostrarError('Reto no encontrado en la URL');
       return;
     }
 
     // Obtener reto
     retoActual = simuladorLocal.obtenerRetoPorId(retoId);
     if (!retoActual) {
-      alert('Reto no encontrado en la base de datos');
-      window.history.back();
+      mostrarError('Reto no disponible en la base de datos');
       return;
     }
 
@@ -155,12 +153,17 @@
       usuarioActual = simuladorLocal.obtenerUsuario(sesion.usuarioId);
     }
 
+    if (!usuarioActual) {
+      mostrarError('Usuario no encontrado. Inicia sesión nuevamente.');
+      return;
+    }
+
     // Renderizar datos
     document.title = 'EcoChallenge - ' + retoActual.titulo;
     document.getElementById('tituloReto').textContent = retoActual.titulo;
     document.getElementById('porQueImporta').textContent = retoActual.descripcion;
 
-    // Cargar imagen de fondo (simulada con color)
+    // Cargar imagen de fondo (simulada con emoji + color)
     const colores = { movilidad: '#87CEEB', consumo: '#FFB6C1', energia: '#FFD700', residuos: '#90EE90' };
     const imgDiv = document.getElementById('imagenReto');
     imgDiv.style.backgroundColor = colores[retoActual.categoria] || '#CCC';
@@ -184,7 +187,7 @@
       </div>
     `;
 
-    // Renderizar pasos (por ahora simples, puedes expandir)
+    // Renderizar pasos
     const pasosDiv = document.getElementById('pasos');
     pasosDiv.innerHTML = `
       <li class="flex items-start gap-3">
@@ -193,7 +196,11 @@
       </li>
       <li class="flex items-start gap-3">
         <span class="material-symbols-outlined text-primary mt-0.5">check_circle</span>
-        <span class="text-text-light/80 dark:text-text-dark/80 text-base leading-relaxed">Registra tu progreso hoy.</span>
+        <span class="text-text-light/80 dark:text-text-dark/80 text-base leading-relaxed">Registra tu progreso en la app.</span>
+      </li>
+      <li class="flex items-start gap-3">
+        <span class="material-symbols-outlined text-primary mt-0.5">check_circle</span>
+        <span class="text-text-light/80 dark:text-text-dark/80 text-base leading-relaxed">Gana <strong>${retoActual.puntos} puntos</strong> al completar.</span>
       </li>
     `;
 
@@ -215,43 +222,96 @@
       btn.classList.add('bg-gray-400', 'cursor-not-allowed');
     } else if (estaAceptado) {
       btn.textContent = 'Completar reto';
-      btn.onclick = () => procesarAccion();
+      btn.classList.add('bg-primary', 'hover:bg-primary/90');
+      btn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+      btn.disabled = false;
     } else {
       btn.textContent = 'Aceptar este reto';
-      btn.onclick = () => procesarAccion();
+      btn.classList.add('bg-primary', 'hover:bg-primary/90');
+      btn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+      btn.disabled = false;
     }
   }
 
   function procesarAccion() {
-    if (!usuarioActual || !retoActual) return;
+    if (!usuarioActual || !retoActual) {
+      mostrarError('Datos no disponibles. Recarga la página.');
+      return;
+    }
 
     const estaAceptado = (usuarioActual.retosAceptados || []).find(r => r.retoId === retoActual.id);
+    const estaCompletado = (usuarioActual.retosCompletados || []).find(r => r.retoId === retoActual.id);
+
+    if (estaCompletado) {
+      alert('Ya completaste este reto.');
+      return;
+    }
 
     if (estaAceptado) {
       // Completar reto
-      const resultado = simuladorLocal.completarReto(usuarioActual.id, retoActual.id);
-      if (resultado.error) {
-        alert('Error: ' + resultado.error);
-      } else {
-        usuarioActual = resultado;
-        alert('¡Felicidades! Has completado el reto y ganado ' + retoActual.puntos + ' puntos.');
-        actualizarBoton();
-      }
+      completarReto();
     } else {
       // Aceptar reto
-      const resultado = simuladorLocal.aceptarReto(usuarioActual.id, retoActual.id);
-      if (resultado.error) {
-        alert('Error: ' + resultado.error);
-      } else {
-        usuarioActual = resultado;
-        alert('¡Reto aceptado! Ahora puedes completarlo.');
-        actualizarBoton();
-      }
+      aceptarReto();
+    }
+  }
+
+  function aceptarReto() {
+    if (!usuarioActual || !retoActual) return;
+
+    const resultado = simuladorLocal.aceptarReto(usuarioActual.id, retoActual.id);
+    
+    if (resultado.error) {
+      mostrarError('No se pudo aceptar: ' + resultado.error);
+    } else {
+      usuarioActual = resultado;
+      // Actualizar sesión
+      simuladorLocal.guardarSesion(resultado);
+      alert('¡Reto aceptado! 🎯 Ahora puedes completarlo cuando lo hayas realizado.');
+      actualizarBoton();
+    }
+  }
+
+  function completarReto() {
+    if (!usuarioActual || !retoActual) return;
+
+    // Confirmar que el usuario completó el reto
+    const confirmacion = confirm('¿Confirmas que completaste este reto?\n\nGanarás ' + retoActual.puntos + ' puntos.');
+    
+    if (!confirmacion) return;
+
+    const resultado = simuladorLocal.completarReto(usuarioActual.id, retoActual.id);
+    
+    if (resultado.error) {
+      mostrarError('No se pudo completar: ' + resultado.error);
+    } else {
+      usuarioActual = resultado;
+      // Actualizar sesión
+      simuladorLocal.guardarSesion(resultado);
+      
+      alert('¡Felicidades! 🎉\n\nCompletaste "' + retoActual.titulo + '"\nGanaste ' + retoActual.puntos + ' puntos\nTus puntos totales: ' + resultado.puntosTotales);
+      actualizarBoton();
     }
   }
 
   function compartirReto() {
-    alert('Compartir: "Estoy completando el reto: ' + retoActual.titulo + '" en EcoChallenge');
+    if (!retoActual) return;
+    
+    const mensaje = 'Estoy completando el reto: "' + retoActual.titulo + '" en EcoChallenge 🌱 ¡Únete a mí!';
+    
+    if (navigator.share) {
+      navigator.share({
+        title: 'EcoChallenge',
+        text: mensaje
+      }).catch(err => console.log('Error compartiendo:', err));
+    } else {
+      alert(mensaje + '\n\n(Copia este mensaje para compartir)');
+    }
+  }
+
+  function mostrarError(mensaje) {
+    alert('❌ Error: ' + mensaje);
+    setTimeout(() => window.history.back(), 1500);
   }
 
   // Cargar al iniciar
