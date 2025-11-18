@@ -4,12 +4,58 @@
  */
 
 // Inicializar la base de datos al cargar la app
+const demoCredenciales = {
+  nombre: 'John Doe',
+  email: 'demo@poligran.edu.co',
+  password: 'Demo1234'
+};
+
+const demoRetosAceptados = 4;
+const demoRetosCompletados = 3;
+const demoFlag = 'ecochallenge_demo_ready';
+
 document.addEventListener('DOMContentLoaded', function() {
-  // Asegurar que simuladorLocal esté disponible
   if (typeof simuladorLocal !== 'undefined') {
     simuladorLocal.inicializarBaseDatos();
+    asegurarUsuarioDemo();
   }
 });
+
+function obtenerUsuarioDemo() {
+  if (typeof simuladorLocal === 'undefined') return null;
+  return simuladorLocal.obtenerUsuarioPorEmail(demoCredenciales.email);
+}
+
+function asegurarUsuarioDemo() {
+  if (typeof simuladorLocal === 'undefined') return;
+
+  let usuario = obtenerUsuarioDemo();
+  if (!usuario) {
+    usuario = simuladorLocal.crearUsuario(demoCredenciales);
+  }
+
+  if (!usuario) return;
+
+  // Solo preparamos datos una vez por dispositivo
+  if (localStorage.getItem(demoFlag)) return;
+
+  const retos = simuladorLocal.obtenerTodosRetos();
+  if (retos.length === 0) return;
+
+  const retosParaAceptar = retos.slice(0, demoRetosAceptados).map(r => r.id);
+  const retosParaCompletar = retos.slice(0, demoRetosCompletados).map(r => r.id);
+
+  retosParaAceptar.forEach(retoId => {
+    simuladorLocal.aceptarReto(usuario.id, retoId);
+  });
+
+  retosParaCompletar.forEach(retoId => {
+    // completarReto internally actualiza racha, puntos e insignias
+    simuladorLocal.completarReto(usuario.id, retoId);
+  });
+
+  localStorage.setItem(demoFlag, '1');
+}
 
 /**
  * Obtener la sesión actual del usuario

@@ -82,3 +82,35 @@ Esta carpeta debe contener la versión final que quieras publicar. Todo lo que e
    npx cap open android
    ```
 - Documenta en este README cualquier cambio relevante en la estructura o en las dependencias del simulador local.
+
+## Persistencia y datos de demostración
+
+- **`localStorage` como base real**: la aplicación no usa un servidor ni una base de datos externa. Toda la información vive en `localStorage` bajo la clave `ecochallenge_db_v1`, que almacena un objeto con `retos`, `usuarios`, `insignias`, etc. Cada vez que `simuladorLocal.js` lee o escribe datos lo hace serializando/deserializando ese JSON completo.
+- **Sesiones y credenciales**: el usuario autenticado se guarda en `localStorage['ecochallenge_sesion']` (id, nombre, email, puntos, racha). Las contraseñas se comparan en texto plano dentro de `simuladorLocal.autenticarUsuario()` porque es un prototipo académico; no se aplican cifrados ni hash.
+- **`baseDatos.json`** solo existe como respaldo/manual en `build/back/`. Durante el runtime del APK no se lee automáticamente; sirve para copiar/pegar valores cuando necesitas reiniciar los datos en un entorno local de pruebas.
+
+### Crear un usuario de demostración para el APK
+
+1. Abre cualquier página dentro de `build/front/` (por ejemplo `dashboard.html`) en el navegador o en un emulador.
+2. Abre la consola del navegador y ejecuta:
+   ```javascript
+   const demo = simuladorLocal.crearUsuario({
+     nombre: 'John Doe',
+     email: 'demo@poligran.edu.co',
+     password: 'Demo1234'
+   });
+   simuladorLocal.guardarSesion(demo);
+   simularRetos(demo.id);
+   ```
+   Donde `simularRetos` puede ser un pequeño helper que aceptes/completes unos retos para que la UI ya muestre progreso. Por ejemplo:
+   ```javascript
+   function simularRetos(userId) {
+     const todos = simuladorLocal.obtenerTodosRetos();
+     todos.slice(0, 3).forEach(r => simuladorLocal.aceptarReto(userId, r.id));
+     todos.slice(0, 2).forEach(r => simuladorLocal.completarReto(userId, r.id));
+   }
+   ```
+3. Cierra la consola. LocalStorage ya tiene el usuario y su sesión, así que podrás cerrar y abrir la app sin volver a ingresar los datos.
+
+> Nota: `app-init.js` ya crea automáticamente a `demo@poligran.edu.co` con contraseña `Demo1234` y acepta/completa varios retos para que al abrir la app se vea progreso. Si deseas ejecutar el script manualmente, puedes hacerlo (por ejemplo para refrescar los datos) y en ese caso revisa que `localStorage['ecochallenge_demo_ready']` se borre para reactivar la rutina.
+
