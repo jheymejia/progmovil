@@ -39,9 +39,22 @@ Esta carpeta debe contener la versión final que quieras publicar. Todo lo que e
 
 ## Preparar tu proyecto web
 - Ejecuta `npm run build` o el comando que deje el sitio listo dentro de `build/`.
+  - `npm run build` — script placeholder: confirma que `build/` ya contiene los archivos listos.
+  - Para probar la aplicación web localmente, sirve la carpeta `build/` con un servidor estático y abre el sitio en el navegador. (Nota: las funcionalidades PWA/ServiceWorker fueron removidas de la versión APK empaquetada.)
+    ```powershell
+    cd C:\wamp64\www\poligran\progmovil\build
+    python -m http.server 5500
+    # o usando node:
+    npx http-server -p 5500
+    ```
+    Abre `http://localhost:5500/front/welcome.html` para probar la aplicación web localmente.
 - Asegúrate de que `package.json` documenta las dependencias necesarias para ese build.
 - Verifica que las rutas a CSS, scripts, JSON y `front/*.html` usen rutas relativas que funcionen bajo `file:///android_asset/www/`.
 - Cada vez que cambies el contenido web, vuelve a ejecutar `npm run build` y luego `npx cap copy` para sincronizar el nativo.
+
+### Offline y Capacitor
+- Nota: Se removieron el `manifest.json` y el `service-worker.js` del `build/` por compatibilidad con el empaquetado en Android (Capacitor WebView usa `file://` y no ejecuta service workers). La aplicación dentro del APK usa `localStorage` para persistir datos y comportarse offline.
+- Si quieres probar PWA/Service Worker en un navegador durante desarrollo, sirve la carpeta `build/` con un servidor local (`http://localhost`) y sigue las instrucciones de prueba más arriba.
 
 ## Entrega académica
 - El entregable esperado es el APK firmado que se obtiene desde Android Studio.
@@ -63,4 +76,9 @@ Esta carpeta debe contener la versión final que quieras publicar. Todo lo que e
 ### Consideraciones de mantenimiento
 - Evita rutas absolutas dentro de HTML, scripts o `fetch`; usa rutas relativas (por ejemplo `./login.html` o `../back/simuladorLocal.js`).
 - Cada cambio en la carpeta `front/` o `back/` debe reflejarse en `build/` antes de ejecutar `npx cap copy`.
+ - Para sincronizar al proyecto nativo (Android) y luego abrir Android Studio ejecutar:
+   ```powershell
+   npm run prepare:android
+   npx cap open android
+   ```
 - Documenta en este README cualquier cambio relevante en la estructura o en las dependencias del simulador local.

@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "build": "echo \"Using pre-prepared build folder; run manual tasks if necessary.\"",
+    "prepare:android": "npm run build && npx cap copy"
+  },
   "dependencies": {
     "@capacitor/android": "^7.4.4",
     "@capacitor/cli": "^7.4.4",

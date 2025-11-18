@@ -124,3 +124,5 @@ function ejemploAutenticar() {
   
   return resultado;
 }
+
+// Service worker registration removed: WebView/file:// does not support SW; offline handled by localStorage
