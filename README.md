@@ -196,4 +196,6 @@ npm run prepare:android
 
 ## Soporte y contacto
 
-Este proyecto es un prototipo académico desarrollado para el curso de Programación Móvil de la Institución Universitaria Politécnico Grancolombiano. Para consultas relacionadas con el desarrollo, consultar la documentación adicional en la carpeta `.docs/` o contactar al equipo de desarrollo.
+Este proyecto es un prototipo académico desarrollado para el curso de Programación Móvil de la Institución Universitaria Politécnico Grancolombiano. Para consultas sobre el desarrollo, revisa la documentación adicional en [DOCUMENTACION.md](DOCUMENTACION.md) o contacta al equipo de desarrollo.
+
+Para una introducción rápida al uso del APK, consulta [QUICKSTAR.md](QUICKSTAR.md).
