@@ -265,12 +265,140 @@
   </div>
 
   <script>
+    let usuarioActual = null;
+
+    // Cargar datos del usuario y renderizar insignias
+    function cargarPerfilUsuario() {
+      if (typeof simuladorLocal === 'undefined') {
+        setTimeout(cargarPerfilUsuario, 100);
+        return;
+      }
+
+      // Obtener sesión
+      const sesion = simuladorLocal.obtenerSesion();
+      if (!sesion) {
+        window.location.href = './login.html';
+        return;
+      }
+
+      // Obtener usuario completo
+      usuarioActual = simuladorLocal.obtenerUsuario(sesion.usuarioId);
+      if (!usuarioActual) {
+        window.location.href = './login.html';
+        return;
+      }
+
+      // Actualizar racha e insignias
+      actualizarRachaInfo();
+      renderizarInsignias();
+      renderizarStats();
+    }
+
+    function actualizarRachaInfo() {
+      if (!usuarioActual) return;
+
+      const racha = usuarioActual.racha || 0;
+      const insignias = usuarioActual.insignias || [];
+      
+      document.getElementById('rachaInfo').textContent = `🔥 Racha actual: ${racha} días`;
+      document.getElementById('insigniaCounter').textContent = `Insignias: ${insignias.length}/10`;
+    }
+
+    function renderizarInsignias() {
+      if (!usuarioActual) return;
+
+      const grid = document.getElementById('insigniasGrid');
+      grid.innerHTML = ''; // Limpiar grid
+
+      const insignias = usuarioActual.insignias || [];
+      const insigniasObtenidas = insignias.map(i => i.id);
+
+      // Obtener todas las insignias disponibles de simuladorLocal
+      const db = simuladorLocal.leerBaseDatos();
+      const insigniasDefinicion = db.insignias || [];
+
+      // Renderizar insignias obtenidas primero
+      insigniasDefinicion.forEach(insig => {
+        const estaObtenida = insigniasObtenidas.includes(insig.id);
+        
+        const cardHTML = `
+          <div class="flex flex-col gap-2 text-center pb-3 ${!estaObtenida ? 'opacity-60' : ''}">
+            <div class="px-4 relative">
+              <div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-full ${!estaObtenida ? 'filter grayscale' : ''} bg-primary/10 flex items-center justify-center text-4xl">
+                ${insig.icono || '🏆'}
+              </div>
+              ${!estaObtenida ? `
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-white bg-black/40 rounded-full p-2" style="font-size: 32px;">lock</span>
+                </div>
+              ` : ''}
+            </div>
+            <div>
+              <p class="text-[#111812] dark:text-gray-200 text-base font-medium leading-normal">${insig.nombre}</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400 leading-normal px-2">${insig.descripcion}</p>
+              <p class="text-primary text-sm font-normal leading-normal">${estaObtenida ? '✓ Obtenida' : 'Bloqueada'}</p>
+            </div>
+          </div>
+        `;
+        grid.innerHTML += cardHTML;
+      });
+
+      // Si no hay insignias definidas en la BD, mostrar mensaje
+      if (insigniasDefinicion.length === 0) {
+        grid.innerHTML = '<p class="col-span-full text-center text-gray-500 py-4">No hay insignias disponibles aún.</p>';
+      }
+    }
+
+    function renderizarStats() {
+      if (!usuarioActual) return;
+
+      // Calcular estadísticas basadas en retos completados
+      const retosCompletados = usuarioActual.retosCompletados || [];
+      
+      // CO2 ahorrado: 2 kg por reto (estimación)
+      const co2Ahorrado = retosCompletados.length * 2;
+      
+      // Árboles plantados: 1 árbol por 5 retos
+      const arbolesPlantados = Math.floor(retosCompletados.length / 5);
+      
+      // Agua ahorrada: 50 litros por reto (estimación)
+      const aguaAhorrada = retosCompletados.length * 50;
+      
+      // Residuos desviados: 5 kg por reto
+      const residuosDesviados = retosCompletados.length * 5;
+
+      // Actualizar DOM
+      const stats = document.querySelectorAll('.flex.min-w-\\[158px\\]');
+      if (stats.length >= 4) {
+        // Buscar por contenido
+        const textos = Array.from(stats).map(s => s.textContent);
+        
+        textos.forEach((texto, idx) => {
+          if (texto.includes('CO2 ahorrado')) {
+            stats[idx].querySelector('p:last-child').textContent = co2Ahorrado + ' kg';
+          } else if (texto.includes('Árboles plantados')) {
+            stats[idx].querySelector('p:last-child').textContent = arbolesPlantados;
+          } else if (texto.includes('Agua ahorrada')) {
+            stats[idx].querySelector('p:last-child').textContent = aguaAhorrada + ' L';
+          } else if (texto.includes('Residuos desviados')) {
+            stats[idx].querySelector('p:last-child').textContent = residuosDesviados + ' kg';
+          }
+        });
+      }
+    }
+
     function cerrarSesion() {
-      localStorage.removeItem('ecochallenge_sesion');
+      if (typeof simuladorLocal !== 'undefined') {
+        simuladorLocal.limpiarSesion();
+      }
       window.location.href = './login.html';
     }
 
     document.addEventListener('DOMContentLoaded', function () {
+      // Cargar perfil
+      cargarPerfilUsuario();
+
+      // Listener para cerrar sesión
       const btnCerrar = document.getElementById('btnCerrarSesionTop');
       if (btnCerrar) {
         btnCerrar.addEventListener('click', cerrarSesion);
