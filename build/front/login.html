@@ -146,7 +146,7 @@
           </label>
         </div>
         <!-- Mensaje de error/éxito -->
-        <div id="mensajeAuth" class="px-4 hidden rounded-lg p-3 text-sm font-medium"></div>
+        <div id="mensajeAuth" class="px-4 hidden rounded-lg p-3 text-sm font-semibold transition-all duration-200 opacity-0"></div>
       </form>
       <!-- Primary CTA Button -->
       <div class="px-4 pt-6">
@@ -193,6 +193,11 @@
   <script>
     // Variables globales para controlar el modo actual
     let modoActual = 'login';
+    const textoBotonPorModo = {
+      login: 'Iniciar sesión',
+      registro: 'Guardar Registro'
+    };
+    let mensajeTimeout;
 
     // Cambiar entre modo login y registro
     function cambiarModo(modo) {
@@ -212,7 +217,7 @@
         socialButtons.classList.add('hidden');
         
         // Cambiar texto del botón
-        btnAuth.textContent = 'Guardar Registro';
+        btnAuth.textContent = textoBotonPorModo.registro;
         btnAuth.dataset.mode = 'registro';
         
         // Limpiar el campo nombre en el formulario
@@ -225,7 +230,7 @@
         socialButtons.classList.remove('hidden');
         
         // Cambiar texto del botón
-        btnAuth.textContent = 'Iniciar sesión';
+        btnAuth.textContent = textoBotonPorModo.login;
         btnAuth.dataset.mode = 'login';
         
         // No requerir nombre en modo login
@@ -278,21 +283,31 @@
     function autenticarUsuario(email, password) {
       // Verificar que simuladorLocal esté disponible
       if (typeof simuladorLocal === 'undefined') {
-        mostrarMensaje('Error: Sistema no iniciado', 'error');
+        mostrarMensaje('Error: sistema no iniciado', 'error');
         return;
       }
-      
-      const resultado = simuladorLocal.autenticarUsuario(email, password);
-      
-      if (resultado.error) {
-        mostrarMensaje('ERROR: ' + resultado.error, 'error');
-      } else {
-        mostrarMensaje('¡Bienvenido, ' + resultado.usuario.nombre + '!', 'success');
-        // Guardar sesión usando simuladorLocal y redirigir después de 1.5s
+
+      setBotonCargando('Validando...');
+
+      try {
+        const resultado = simuladorLocal.autenticarUsuario(email, password);
+
+        if (resultado.error) {
+          resetEstadoBoton();
+          mostrarMensaje(obtenerMensajeErrorLogin(resultado.error), 'error');
+          return;
+        }
+
+        mostrarMensaje('Bienvenido, ' + resultado.usuario.nombre + '!', 'success');
         setTimeout(() => {
           simuladorLocal.guardarSesion(resultado.usuario);
+          resetEstadoBoton();
           window.location.href = './dashboard.html';
-        }, 1500);
+        }, 1100);
+      } catch (error) {
+        resetEstadoBoton();
+        mostrarMensaje('Ocurrió un error inesperado. Intenta de nuevo.', 'error');
+        console.error('Error en autenticación:', error);
       }
     }
 
@@ -300,25 +315,35 @@
     function registrarUsuario(nombre, email, password) {
       // Verificar que simuladorLocal esté disponible
       if (typeof simuladorLocal === 'undefined') {
-        mostrarMensaje('Error: Sistema no iniciado', 'error');
+        mostrarMensaje('Error: sistema no iniciado', 'error');
         return;
       }
-      
-      const resultado = simuladorLocal.crearUsuario({
-        nombre: nombre,
-        email: email,
-        password: password
-      });
-      
-      if (resultado.error) {
-        mostrarMensaje('ERROR: ' + resultado.error, 'error');
-      } else {
-        mostrarMensaje('¡Registro exitoso, ' + resultado.nombre + '! Iniciando sesión...', 'success');
-        // Guardar sesión usando simuladorLocal y redirigir después de 1.5s
+
+      setBotonCargando('Registrando...');
+
+      try {
+        const resultado = simuladorLocal.crearUsuario({
+          nombre: nombre,
+          email: email,
+          password: password
+        });
+
+        if (resultado.error) {
+          resetEstadoBoton();
+          mostrarMensaje(obtenerMensajeErrorRegistro(resultado.error), 'error');
+          return;
+        }
+
+        mostrarMensaje('Registro completado. Iniciando sesión...', 'success');
         setTimeout(() => {
           simuladorLocal.guardarSesion(resultado);
+          resetEstadoBoton();
           window.location.href = './dashboard.html';
-        }, 1500);
+        }, 1100);
+      } catch (error) {
+        resetEstadoBoton();
+        mostrarMensaje('Ocurrió un error inesperado. Intenta nuevamente.', 'error');
+        console.error('Error en registro:', error);
       }
     }
 
@@ -330,20 +355,68 @@
     // Mostrar mensaje de error o éxito
     function mostrarMensaje(mensaje, tipo) {
       const divMensaje = document.getElementById('mensajeAuth');
+      clearTimeout(mensajeTimeout);
       divMensaje.textContent = mensaje;
-      divMensaje.classList.remove('hidden');
-      
-      // Aplicar estilos según el tipo
+      divMensaje.className = 'px-4 rounded-lg p-3 text-sm font-semibold transition-all duration-200 shadow-sm border opacity-100';
       if (tipo === 'error') {
-        divMensaje.className = 'px-4 rounded-lg p-3 text-sm font-medium text-red-700 bg-red-50 dark:text-red-200 dark:bg-red-900/30';
+        divMensaje.classList.add('border-red-200', 'bg-red-50', 'text-red-700', 'dark:border-red-500/70', 'dark:bg-red-900/30', 'dark:text-red-200');
       } else if (tipo === 'success') {
-        divMensaje.className = 'px-4 rounded-lg p-3 text-sm font-medium text-green-700 bg-green-50 dark:text-green-200 dark:bg-green-900/30';
+        divMensaje.classList.add('border-green-200', 'bg-green-50', 'text-green-700', 'dark:border-green-500/70', 'dark:bg-green-900/30', 'dark:text-green-200');
       }
+      divMensaje.classList.remove('hidden');
+      divMensaje.classList.remove('opacity-0');
+      mensajeTimeout = setTimeout(() => ocultarMensaje(), 4200);
+    }
+
+    function ocultarMensaje() {
+      const divMensaje = document.getElementById('mensajeAuth');
+      divMensaje.classList.add('opacity-0');
+      setTimeout(() => divMensaje.classList.add('hidden'), 220);
     }
 
     // Limpiar mensaje
     function limpiarMensaje() {
-      document.getElementById('mensajeAuth').classList.add('hidden');
+      clearTimeout(mensajeTimeout);
+      const divMensaje = document.getElementById('mensajeAuth');
+      divMensaje.className = 'px-4 hidden rounded-lg p-3 text-sm font-semibold transition-all duration-200 opacity-0';
+      divMensaje.textContent = '';
+    }
+
+    function setBotonCargando(texto) {
+      const btnAuth = document.getElementById('btnAuth');
+      btnAuth.dataset.originalLabel = btnAuth.textContent;
+      btnAuth.disabled = true;
+      btnAuth.textContent = texto;
+      btnAuth.style.opacity = '0.64';
+      btnAuth.setAttribute('aria-busy', 'true');
+    }
+
+    function resetEstadoBoton() {
+      const btnAuth = document.getElementById('btnAuth');
+      const modo = btnAuth.dataset.mode || modoActual;
+      const textoBase = btnAuth.dataset.originalLabel || textoBotonPorModo[modo] || textoBotonPorModo.login;
+      btnAuth.textContent = textoBase;
+      btnAuth.disabled = false;
+      btnAuth.style.opacity = '1';
+      btnAuth.removeAttribute('aria-busy');
+      delete btnAuth.dataset.originalLabel;
+    }
+
+    function obtenerMensajeErrorLogin(error) {
+      if (error === 'Usuario no encontrado') {
+        return 'No se encontró una cuenta con ese correo. Verifica tu email.';
+      }
+      if (error === 'Contraseña incorrecta') {
+        return 'La contraseña no coincide. Intenta nuevamente.';
+      }
+      return 'Credenciales inválidas. Por favor revisa tus datos.';
+    }
+
+    function obtenerMensajeErrorRegistro(error) {
+      if (error === 'El email ya está registrado') {
+        return 'Ese correo ya tiene una cuenta. ¿Quieres iniciar sesión?';
+      }
+      return 'No pudimos completar el registro. Revisa los datos y vuelve a intentarlo.';
     }
 
     
