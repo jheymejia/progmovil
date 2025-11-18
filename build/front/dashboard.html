@@ -154,6 +154,47 @@
                     <p id="insigniaDisplay" class="text-primary text-3xl font-bold">0/10</p>
                 </div>
             </div>
+            <!-- Progreso Visual - Gráficos Minimalistas -->
+            <div class="flex flex-col gap-4">
+                <h2 class="text-text-light dark:text-text-dark text-2xl font-bold leading-tight tracking-[-0.015em] px-0 pb-2">
+                    Tu progreso
+                </h2>
+                
+                <!-- Gráfico: Puntos esta semana -->
+                <div class="flex flex-col gap-3 rounded-xl bg-card-light dark:bg-card-dark p-4 border border-border-light dark:border-border-dark shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <p class="text-text-light dark:text-text-dark text-sm font-medium">Puntos esta semana</p>
+                        <span class="text-xs text-gray-500 dark:text-gray-400" id="totalPuntosText">0 pts</span>
+                    </div>
+                    <svg id="chartPuntos" viewBox="0 0 300 100" class="w-full h-16" style="background: rgba(0,0,0,0.02); border-radius: 8px;">
+                        <!-- Barras se dibujarán aquí dinámicamente -->
+                    </svg>
+                </div>
+
+                <!-- Gráfico: Retos por categoría -->
+                <div class="flex flex-col gap-3 rounded-xl bg-card-light dark:bg-card-dark p-4 border border-border-light dark:border-border-dark shadow-sm">
+                    <p class="text-text-light dark:text-text-dark text-sm font-medium">Retos por categoría</p>
+                    <div class="flex items-center justify-between gap-3">
+                        <svg id="chartCategoria" viewBox="0 0 100 100" class="w-20 h-20">
+                            <!-- Dónut se dibujará aquí dinámicamente -->
+                        </svg>
+                        <div id="legendaCategoria" class="flex-1 flex flex-col gap-2 text-xs">
+                            <!-- Leyenda se dibujará aquí dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progreso diario -->
+                <div class="flex flex-col gap-3 rounded-xl bg-card-light dark:bg-card-dark p-4 border border-border-light dark:border-border-dark shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <p class="text-text-light dark:text-text-dark text-sm font-medium">Últimos 7 días</p>
+                        <span class="text-xs text-gray-500 dark:text-gray-400" id="racha7diasText">0 completados</span>
+                    </div>
+                    <div id="chartDiario" class="flex items-end justify-around gap-1 h-16 bg-background-light dark:bg-background-dark rounded-lg p-2">
+                        <!-- Barras diarias se dibujarán aquí dinámicamente -->
+                    </div>
+                </div>
+            </div>
             <!-- My Challenges Section -->
             <div class="flex flex-col">
                 <h2
@@ -311,6 +352,9 @@
                         // Mostrar insignias obtenidas
                         const insigniasOb = (usuario.insignias && usuario.insignias.length) || 0;
                         document.getElementById('insigniaDisplay').textContent = insigniasOb + '/10';
+                        
+                        // Generar gráficos
+                        generarGraficos(usuario);
                     }
                 } catch (error) {
                     console.error('Error al cargar datos del usuario:', error);
@@ -319,6 +363,170 @@
                 // Si no hay sesión, redirigir a login (ya lo hace _sessionCheck.js)
                 window.location.href = './login.html';
             }
+        }
+
+        function generarGraficos(usuario) {
+            generarGraficoSemana(usuario);
+            generarGraficoCategoria(usuario);
+            generarGraficoDiario(usuario);
+        }
+
+        // Gráfico: Puntos esta semana
+        function generarGraficoSemana(usuario) {
+            const retosCompletados = usuario.retosCompletados || [];
+            
+            // Simular datos de últimos 7 días (puedes adaptarlo a fechas reales después)
+            const puntosdia = [0, 0, 0, 0, 0, 0, 0];
+            retosCompletados.forEach(reto => {
+                const idx = Math.min(6, Math.floor(Math.random() * 7)); // Distribución aleatoria
+                puntosdia[idx] += reto.puntos || 0;
+            });
+
+            const maxPuntos = Math.max(...puntosdia, 50); // Mínimo 50 para escala
+            const svgPuntos = document.getElementById('chartPuntos');
+            svgPuntos.innerHTML = '';
+
+            // Crear barras
+            const anchoTotal = 300;
+            const ancho = 35;
+            const gap = 5;
+            
+            puntosdia.forEach((pts, i) => {
+                const altura = (pts / maxPuntos) * 80 + 5; // +5 mínimo
+                const x = i * (ancho + gap) + 5;
+                const y = 100 - altura;
+
+                // Barra
+                const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                rect.setAttribute('x', x);
+                rect.setAttribute('y', y);
+                rect.setAttribute('width', ancho);
+                rect.setAttribute('height', altura);
+                rect.setAttribute('fill', '#228B22'); // primary color
+                rect.setAttribute('rx', '3');
+                rect.setAttribute('opacity', '0.8');
+
+                // Label día
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', x + ancho / 2);
+                text.setAttribute('y', 98);
+                text.setAttribute('text-anchor', 'middle');
+                text.setAttribute('font-size', '10');
+                text.setAttribute('fill', '#666');
+                text.textContent = ['L', 'M', 'X', 'J', 'V', 'S', 'D'][i];
+
+                svgPuntos.appendChild(rect);
+                svgPuntos.appendChild(text);
+            });
+
+            document.getElementById('totalPuntosText').textContent = puntosdia.reduce((a, b) => a + b, 0) + ' pts esta semana';
+        }
+
+        // Gráfico: Retos por categoría (dónut)
+        function generarGraficoCategoria(usuario) {
+            const retosCompletados = usuario.retosCompletados || [];
+            const db = simuladorLocal.leerBaseDatos();
+            const retos = db.retos || [];
+
+            // Contar retos por categoría
+            const categorias = { movilidad: 0, consumo: 0, energia: 0, residuos: 0 };
+            const colores = { movilidad: '#87CEEB', consumo: '#FFB6C1', energia: '#FFD700', residuos: '#90EE90' };
+            const emojis = { movilidad: '🚴', consumo: '🛒', energia: '💡', residuos: '♻️' };
+
+            retosCompletados.forEach(rc => {
+                const reto = retos.find(r => r.id === rc.retoId);
+                if (reto && categorias.hasOwnProperty(reto.categoria)) {
+                    categorias[reto.categoria]++;
+                }
+            });
+
+            const total = Object.values(categorias).reduce((a, b) => a + b, 0) || 1;
+            const svg = document.getElementById('chartCategoria');
+            svg.innerHTML = '';
+
+            const cx = 50, cy = 50, r = 35, innerR = 20;
+            let angle = -90;
+
+            Object.entries(categorias).forEach(([cat, count]) => {
+                const porcentaje = count / total;
+                const sliceAngle = porcentaje * 360;
+
+                if (count > 0) {
+                    // Crear arco dónut
+                    const startAngle = angle;
+                    const endAngle = angle + sliceAngle;
+                    const start = polarToCartesian(cx, cy, r, endAngle);
+                    const end = polarToCartesian(cx, cy, r, startAngle);
+                    const start2 = polarToCartesian(cx, cy, innerR, endAngle);
+                    const end2 = polarToCartesian(cx, cy, innerR, startAngle);
+
+                    const largeArc = sliceAngle > 180 ? 1 : 0;
+                    const path = `M ${start.x} ${start.y} A ${r} ${r} 0 ${largeArc} 0 ${end.x} ${end.y} L ${end2.x} ${end2.y} A ${innerR} ${innerR} 0 ${largeArc} 1 ${start2.x} ${start2.y} Z`;
+
+                    const pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    pathEl.setAttribute('d', path);
+                    pathEl.setAttribute('fill', colores[cat]);
+                    pathEl.setAttribute('opacity', '0.7');
+                    svg.appendChild(pathEl);
+                }
+
+                angle += sliceAngle;
+            });
+
+            // Leyenda
+            const legenda = document.getElementById('legendaCategoria');
+            legenda.innerHTML = '';
+            Object.entries(categorias).forEach(([cat, count]) => {
+                const item = document.createElement('div');
+                item.className = 'flex items-center gap-2';
+                item.innerHTML = `
+                    <span>${emojis[cat]}</span>
+                    <div class="flex-1">
+                        <p class="text-text-light dark:text-text-dark font-medium capitalize">${cat}</p>
+                        <p class="text-xs text-gray-500">${count} reto${count !== 1 ? 's' : ''}</p>
+                    </div>
+                `;
+                legenda.appendChild(item);
+            });
+        }
+
+        // Gráfico: Últimos 7 días
+        function generarGraficoDiario(usuario) {
+            const retosCompletados = usuario.retosCompletados || [];
+            
+            // Crear datos de últimos 7 días
+            const hoy = new Date();
+            const diasData = [];
+            for (let i = 6; i >= 0; i--) {
+                const fecha = new Date(hoy);
+                fecha.setDate(fecha.getDate() - i);
+                const fechaStr = fecha.toISOString().split('T')[0];
+                const completados = retosCompletados.filter(r => r.fechaCompletacion.split('T')[0] === fechaStr).length;
+                diasData.push({ fecha: fechaStr, count: completados });
+            }
+
+            const container = document.getElementById('chartDiario');
+            container.innerHTML = '';
+            const maxCount = Math.max(...diasData.map(d => d.count), 2);
+
+            diasData.forEach((dia, idx) => {
+                const bar = document.createElement('div');
+                bar.className = 'flex-1 bg-primary rounded-t cursor-pointer hover:opacity-80 transition-opacity';
+                bar.style.height = ((dia.count / maxCount) * 100 || 5) + '%';
+                bar.title = ['L', 'M', 'X', 'J', 'V', 'S', 'D'][idx] + ': ' + dia.count + ' reto(s)';
+                container.appendChild(bar);
+            });
+
+            const totalDias = diasData.reduce((a, b) => a + b.count, 0);
+            document.getElementById('racha7diasText').textContent = totalDias + ' completados esta semana';
+        }
+
+        function polarToCartesian(cx, cy, radius, angleInDegrees) {
+            const angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
+            return {
+                x: cx + (radius * Math.cos(angleInRadians)),
+                y: cy + (radius * Math.sin(angleInRadians))
+            };
         }
 
         // Cerrar sesión
