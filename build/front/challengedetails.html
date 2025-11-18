@@ -2,7 +2,10 @@
 <html lang="es"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>EcoChallenge - Semana de almuerzos sin plástico</title>
+<title>EcoChallenge - Detalle de reto</title>
+<!-- Cargar simuladorLocal antes de verificar sesión -->
+<script src="../back/simuladorLocal.js"></script>
+<script src="_sessionCheck.js"></script>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
@@ -80,61 +83,178 @@
 <div id="app" class="relative flex min-h-screen w-full flex-col bg-background-light dark:bg-background-dark group/design-root overflow-x-hidden text-text-light dark:text-text-dark">
   <div class="app-content">
   <div class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-10">
-<div class="flex size-12 shrink-0 items-center justify-center">
+<button onclick="window.history.back()" class="flex size-12 shrink-0 items-center justify-center cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 rounded-lg transition-colors">
 <span class="material-symbols-outlined text-text-light dark:text-text-dark">arrow_back</span>
-</div>
+</button>
 <div class="flex w-12 items-center justify-end">
-<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 bg-transparent text-text-light dark:text-text-dark gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 p-0">
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 bg-transparent text-text-light dark:text-text-dark gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 p-0" onclick="compartirReto()">
 <span class="material-symbols-outlined">share</span>
 </button>
 </div>
 </div>
 <main class="flex-grow">
 <div class="px-4 pt-2">
-<img alt="Persona preparando un almuerzo saludable en recipientes reutilizables, con verduras frescas y una botella de agua de acero inoxidable." class="w-full h-60 sm:h-80 object-cover rounded-xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoZXJ7wg1D_k7fLdsPfCRybq985csOwl37Vcmd73QjZFWcNRtHa7ZPWRWXk9C-SCAgb99KeTTwGBszsQd_WQh7PZ5816i1CpIO5QR710d9gLPZWljGbnRFhUPTiZ6WgvYhvBDWWXGL-d8pkd1qT-v2umAj7EfHwI8rrL3hUzU8j50y7j0D41Od21PBVMkjNvBX9kbjPdN5mBRHLwMXZbQ3cbp321dbfEaEdI24ueOsjuTMJW0oIlDIy5aSimwbnURpL9MR11c4BWlE"/>
+<div id="imagenReto" class="w-full h-60 sm:h-80 object-cover rounded-xl bg-gray-300 dark:bg-gray-700"></div>
 </div>
-<h1 class="text-text-light dark:text-text-dark tracking-tight text-[32px] font-bold leading-tight px-4 text-left pb-1 pt-4">Semana de almuerzos sin plástico</h1>
-<div class="flex gap-3 px-4 pt-3 flex-wrap">
-<div class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-full bg-primary/20 text-primary px-4">
-<p class="text-sm font-medium leading-normal">Reducción de residuos</p>
-</div>
-<div class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-full bg-secondary/20 text-secondary px-4">
-<p class="text-sm font-medium leading-normal">Dificultad media</p>
-</div>
-<div class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-full bg-accent/20 px-4">
-<p class="text-accent text-sm font-bold leading-normal">100 Puntos</p>
-</div>
+<h1 id="tituloReto" class="text-text-light dark:text-text-dark tracking-tight text-[32px] font-bold leading-tight px-4 text-left pb-1 pt-4">Cargando reto...</h1>
+<div id="tagsReto" class="flex gap-3 px-4 pt-3 flex-wrap">
+<!-- Tags se cargarán dinámicamente -->
 </div>
 <div class="flex flex-col gap-4 p-4">
 <div class="flex flex-col gap-4 rounded-xl border border-border-light dark:border-border-dark bg-white dark:bg-background-dark p-4">
 <h3 class="text-text-light dark:text-text-dark text-lg font-bold leading-tight tracking-[-0.015em]">Por qué importa</h3>
-<p class="text-text-light/80 dark:text-text-dark/80 text-base leading-relaxed">Reducir los plásticos de un solo uso en nuestra rutina diaria de almuerzo puede disminuir significativamente los residuos en vertederos y la contaminación de los océanos. Este pequeño cambio contribuye a un planeta más saludable para todos.</p>
+<p id="porQueImporta" class="text-text-light/80 dark:text-text-dark/80 text-base leading-relaxed">Cargando descripción...</p>
 </div>
 <div class="flex flex-col gap-4 rounded-xl border border-border-light dark:border-border-dark bg-white dark:bg-background-dark p-4">
 <h3 class="text-text-light dark:text-text-dark text-lg font-bold leading-tight tracking-[-0.015em]">Cómo completarlo</h3>
-<ul class="space-y-3">
-<li class="flex items-start gap-3">
-<span class="material-symbols-outlined text-primary mt-0.5">check_circle</span>
-<span class="text-text-light/80 dark:text-text-dark/80 text-base leading-relaxed">Usa una botella de agua reutilizable todos los días de la semana.</span>
-</li>
-<li class="flex items-start gap-3">
-<span class="material-symbols-outlined text-primary mt-0.5">check_circle</span>
-<span class="text-text-light/80 dark:text-text-dark/80 text-base leading-relaxed">Prepara tu almuerzo en recipientes reutilizables.</span>
-</li>
-<li class="flex items-start gap-3">
-<span class="material-symbols-outlined text-primary mt-0.5">check_circle</span>
-<span class="text-text-light/80 dark:text-text-dark/80 text-base leading-relaxed">Rechaza pajillas y cubiertos de plástico al comer fuera.</span>
-</li>
+<ul id="pasos" class="space-y-3">
+<!-- Los pasos se cargarán dinámicamente -->
 </ul>
 </div>
 </div>
 </main>
   </div>
   <div class="sticky bottom-0 bg-background-light dark:bg-background-dark p-4 w-full border-t border-border-light dark:border-border-dark">
-    <button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 bg-primary text-white gap-2 text-base font-bold leading-normal tracking-wide transition-colors hover:bg-primary/90">Aceptar este reto</button>
+    <button id="btnAccion" class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 bg-primary text-white gap-2 text-base font-bold leading-normal tracking-wide transition-colors hover:bg-primary/90" onclick="procesarAccion()">Aceptar este reto</button>
   </div>
 </div>
 
-<!-- Service worker registration removed (not supported in Capacitor WebView) -->
+<script>
+  let retoActual = null;
+  let usuarioActual = null;
 
-</body></html>
+  function obtenerIdRetoDelURL() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('id');
+  }
+
+  function cargarDetalleReto() {
+    if (typeof simuladorLocal === 'undefined') {
+      setTimeout(cargarDetalleReto, 100);
+      return;
+    }
+
+    const retoId = obtenerIdRetoDelURL();
+    if (!retoId) {
+      alert('Reto no encontrado');
+      window.history.back();
+      return;
+    }
+
+    // Obtener reto
+    retoActual = simuladorLocal.obtenerRetoPorId(retoId);
+    if (!retoActual) {
+      alert('Reto no encontrado en la base de datos');
+      window.history.back();
+      return;
+    }
+
+    // Obtener usuario actual
+    const sesion = simuladorLocal.obtenerSesion();
+    if (sesion) {
+      usuarioActual = simuladorLocal.obtenerUsuario(sesion.usuarioId);
+    }
+
+    // Renderizar datos
+    document.title = 'EcoChallenge - ' + retoActual.titulo;
+    document.getElementById('tituloReto').textContent = retoActual.titulo;
+    document.getElementById('porQueImporta').textContent = retoActual.descripcion;
+
+    // Cargar imagen de fondo (simulada con color)
+    const colores = { movilidad: '#87CEEB', consumo: '#FFB6C1', energia: '#FFD700', residuos: '#90EE90' };
+    const imgDiv = document.getElementById('imagenReto');
+    imgDiv.style.backgroundColor = colores[retoActual.categoria] || '#CCC';
+    imgDiv.textContent = retoActual.icono || '🌱';
+    imgDiv.style.fontSize = '60px';
+    imgDiv.style.display = 'flex';
+    imgDiv.style.alignItems = 'center';
+    imgDiv.style.justifyContent = 'center';
+
+    // Renderizar tags
+    const tagsDiv = document.getElementById('tagsReto');
+    tagsDiv.innerHTML = `
+      <div class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-full bg-primary/20 text-primary px-4">
+        <p class="text-sm font-medium leading-normal">${retoActual.categoria}</p>
+      </div>
+      <div class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-full bg-secondary/20 text-secondary px-4">
+        <p class="text-sm font-medium leading-normal">Dificultad ${retoActual.dificultad}</p>
+      </div>
+      <div class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-full bg-accent/20 px-4">
+        <p class="text-accent text-sm font-bold leading-normal">+${retoActual.puntos} puntos</p>
+      </div>
+    `;
+
+    // Renderizar pasos (por ahora simples, puedes expandir)
+    const pasosDiv = document.getElementById('pasos');
+    pasosDiv.innerHTML = `
+      <li class="flex items-start gap-3">
+        <span class="material-symbols-outlined text-primary mt-0.5">check_circle</span>
+        <span class="text-text-light/80 dark:text-text-dark/80 text-base leading-relaxed">${retoActual.descripcion}</span>
+      </li>
+      <li class="flex items-start gap-3">
+        <span class="material-symbols-outlined text-primary mt-0.5">check_circle</span>
+        <span class="text-text-light/80 dark:text-text-dark/80 text-base leading-relaxed">Registra tu progreso hoy.</span>
+      </li>
+    `;
+
+    // Actualizar botón según estado
+    actualizarBoton();
+  }
+
+  function actualizarBoton() {
+    const btn = document.getElementById('btnAccion');
+    if (!usuarioActual || !retoActual) return;
+
+    const estaAceptado = (usuarioActual.retosAceptados || []).find(r => r.retoId === retoActual.id);
+    const estaCompletado = (usuarioActual.retosCompletados || []).find(r => r.retoId === retoActual.id);
+
+    if (estaCompletado) {
+      btn.textContent = '✓ Reto completado';
+      btn.disabled = true;
+      btn.classList.remove('bg-primary', 'hover:bg-primary/90');
+      btn.classList.add('bg-gray-400', 'cursor-not-allowed');
+    } else if (estaAceptado) {
+      btn.textContent = 'Completar reto';
+      btn.onclick = () => procesarAccion();
+    } else {
+      btn.textContent = 'Aceptar este reto';
+      btn.onclick = () => procesarAccion();
+    }
+  }
+
+  function procesarAccion() {
+    if (!usuarioActual || !retoActual) return;
+
+    const estaAceptado = (usuarioActual.retosAceptados || []).find(r => r.retoId === retoActual.id);
+
+    if (estaAceptado) {
+      // Completar reto
+      const resultado = simuladorLocal.completarReto(usuarioActual.id, retoActual.id);
+      if (resultado.error) {
+        alert('Error: ' + resultado.error);
+      } else {
+        usuarioActual = resultado;
+        alert('¡Felicidades! Has completado el reto y ganado ' + retoActual.puntos + ' puntos.');
+        actualizarBoton();
+      }
+    } else {
+      // Aceptar reto
+      const resultado = simuladorLocal.aceptarReto(usuarioActual.id, retoActual.id);
+      if (resultado.error) {
+        alert('Error: ' + resultado.error);
+      } else {
+        usuarioActual = resultado;
+        alert('¡Reto aceptado! Ahora puedes completarlo.');
+        actualizarBoton();
+      }
+    }
+  }
+
+  function compartirReto() {
+    alert('Compartir: "Estoy completando el reto: ' + retoActual.titulo + '" en EcoChallenge');
+  }
+
+  // Cargar al iniciar
+  document.addEventListener('DOMContentLoaded', cargarDetalleReto);
+  cargarDetalleReto(); // También intentar cargar inmediatamente
+</script>

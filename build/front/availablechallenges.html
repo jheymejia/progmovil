@@ -3,6 +3,8 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>EcoChallenge - Descubrir retos</title>
+<!-- Cargar simuladorLocal antes de verificar sesión -->
+<script src="../back/simuladorLocal.js"></script>
 <script src="_sessionCheck.js"></script>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
@@ -99,23 +101,20 @@
 </label>
 </div>
 <div class="flex gap-3 px-4 py-3 overflow-x-auto">
-<div class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-accent text-white px-5 cursor-pointer">
+<div class="categoria-filter flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-accent text-white px-5 cursor-pointer" data-categoria="todos">
 <p class="text-sm font-medium leading-normal">Todos</p>
 </div>
-<div class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-chip-light dark:bg-chip-dark px-5 cursor-pointer">
+<div class="categoria-filter flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-chip-light dark:bg-chip-dark px-5 cursor-pointer" data-categoria="movilidad">
 <p class="text-text-light dark:text-text-dark text-sm font-medium leading-normal">Movilidad</p>
 </div>
-<div class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-chip-light dark:bg-chip-dark px-5 cursor-pointer">
+<div class="categoria-filter flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-chip-light dark:bg-chip-dark px-5 cursor-pointer" data-categoria="energia">
 <p class="text-text-light dark:text-text-dark text-sm font-medium leading-normal">Energía</p>
 </div>
-<div class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-chip-light dark:bg-chip-dark px-5 cursor-pointer">
+<div class="categoria-filter flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-chip-light dark:bg-chip-dark px-5 cursor-pointer" data-categoria="residuos">
 <p class="text-text-light dark:text-text-dark text-sm font-medium leading-normal">Residuos</p>
 </div>
-<div class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-chip-light dark:bg-chip-dark px-5 cursor-pointer">
+<div class="categoria-filter flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-chip-light dark:bg-chip-dark px-5 cursor-pointer" data-categoria="consumo">
 <p class="text-text-light dark:text-text-dark text-sm font-medium leading-normal">Consumo</p>
-</div>
-<div class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-chip-light dark:bg-chip-dark px-5 cursor-pointer">
-<p class="text-text-light dark:text-text-dark text-sm font-medium leading-normal">Alimentación</p>
 </div>
 </div>
 <h2 class="text-text-light dark:text-text-dark text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Retos destacados</h2>
@@ -138,72 +137,9 @@
 </div>
 </div>
 </div>
-<h2 class="text-text-light dark:text-text-dark text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Novedades de la semana</h2>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4 px-4">
-<div class="flex items-start justify-between gap-4 rounded-xl bg-card-light dark:bg-card-dark p-4 shadow-[0_4px_12px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_12px_rgba(0,0,0,0.2)]">
-<div class="flex flex-[2_2_0px] flex-col gap-4">
-<div class="flex flex-col gap-1">
-<p class="text-primary dark:text-primary text-sm font-normal leading-normal">Diario, Movilidad</p>
-<p class="text-text-light dark:text-text-dark text-base font-bold leading-tight">Ir en bicicleta al trabajo</p>
-<p class="text-text-muted-light dark:text-text-muted-dark text-sm font-normal leading-normal">Usa tu bicicleta en lugar del coche.</p>
-</div>
-<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-8 px-4 flex-row-reverse bg-accent text-white pr-2 gap-1 text-sm font-medium leading-normal w-fit">
-<span class="material-symbols-outlined text-base">add</span>
-<span class="truncate">Unirse</span>
-</button>
-</div>
-<div class="flex-1 flex items-center justify-center p-2 bg-accent/10 dark:bg-accent/20 rounded-lg">
-<span class="material-symbols-outlined text-4xl text-accent">directions_bike</span>
-</div>
-</div>
-<div class="flex items-start justify-between gap-4 rounded-xl bg-card-light dark:bg-card-dark p-4 shadow-[0_4px_12px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_12px_rgba(0,0,0,0.2)] opacity-60">
-<div class="flex flex-[2_2_0px] flex-col gap-4">
-<div class="flex flex-col gap-1">
-<p class="text-primary dark:text-primary text-sm font-normal leading-normal">Diario, Energía</p>
-<p class="text-text-light dark:text-text-dark text-base font-bold leading-tight">Desconecta dispositivos</p>
-<p class="text-text-muted-light dark:text-text-muted-dark text-sm font-normal leading-normal">Apaga la electrónica en espera.</p>
-</div>
-<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-8 px-4 bg-chip-light dark:bg-chip-dark text-text-light dark:text-text-dark pr-2 gap-1 text-sm font-medium leading-normal w-fit">
-<span class="material-symbols-outlined text-base text-primary">check_circle</span>
-<span class="truncate">Unido</span>
-</button>
-</div>
-<div class="flex-1 flex items-center justify-center p-2 bg-primary/10 dark:bg-primary/20 rounded-lg">
-<span class="material-symbols-outlined text-4xl text-primary">power_off</span>
-</div>
-</div>
-<div class="flex items-start justify-between gap-4 rounded-xl bg-card-light dark:bg-card-dark p-4 shadow-[0_4px_12px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_12px_rgba(0,0,0,0.2)]">
-<div class="flex flex-[2_2_0px] flex-col gap-4">
-<div class="flex flex-col gap-1">
-<p class="text-primary dark:text-primary text-sm font-normal leading-normal">Semanal, Residuos</p>
-<p class="text-text-light dark:text-text-dark text-base font-bold leading-tight">Almuerzo sin residuos</p>
-<p class="text-text-muted-light dark:text-text-muted-dark text-sm font-normal leading-normal">Prepara tu almuerzo sin plástico de un solo uso.</p>
-</div>
-<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-8 px-4 flex-row-reverse bg-accent text-white pr-2 gap-1 text-sm font-medium leading-normal w-fit">
-<span class="material-symbols-outlined text-base">add</span>
-<span class="truncate">Unirse</span>
-</button>
-</div>
-<div class="flex-1 flex items-center justify-center p-2 bg-tag-accent/10 dark:bg-tag-accent/20 rounded-lg">
-<span class="material-symbols-outlined text-4xl text-tag-accent">recycling</span>
-</div>
-</div>
-<div class="flex items-start justify-between gap-4 rounded-xl bg-card-light dark:bg-card-dark p-4 shadow-[0_4px_12px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_12px_rgba(0,0,0,0.2)]">
-<div class="flex flex-[2_2_0px] flex-col gap-4">
-<div class="flex flex-col gap-1">
-<p class="text-primary dark:text-primary text-sm font-normal leading-normal">Diario, Agua</p>
-<p class="text-text-light dark:text-text-dark text-base font-bold leading-tight">Ducha de 5 minutos</p>
-<p class="text-text-muted-light dark:text-text-muted-dark text-sm font-normal leading-normal">Desafíate a una ducha más corta.</p>
-</div>
-<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-8 px-4 flex-row-reverse bg-accent text-white pr-2 gap-1 text-sm font-medium leading-normal w-fit">
-<span class="material-symbols-outlined text-base">add</span>
-<span class="truncate">Unirse</span>
-</button>
-</div>
-<div class="flex-1 flex items-center justify-center p-2 bg-accent/10 dark:bg-accent/20 rounded-lg">
-<span class="material-symbols-outlined text-4xl text-accent">shower</span>
-</div>
-</div>
+<h2 class="text-text-light dark:text-text-dark text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Retos disponibles</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 px-4 pb-4" id="retosGrid">
+  <!-- Los retos se cargarán dinámicamente aquí -->
 </div>
 </main>
     </div>
@@ -232,8 +168,93 @@
 </div>
 
 <script>
+  // Cargar retos dinámicamente desde simuladorLocal
+  function cargarRetos(filtroCategoria = null) {
+    if (typeof simuladorLocal === 'undefined') {
+      setTimeout(() => cargarRetos(filtroCategoria), 100);
+      return;
+    }
+    
+    let retos = simuladorLocal.obtenerTodosRetos();
+    
+    // Filtrar por categoría si es necesario
+    if (filtroCategoria && filtroCategoria !== 'todos') {
+      retos = retos.filter(r => r.categoria === filtroCategoria);
+    }
+    
+    // Obtener sesión para saber qué retos ya fueron aceptados
+    const sesion = simuladorLocal.obtenerSesion();
+    const usuario = sesion ? simuladorLocal.obtenerUsuario(sesion.usuarioId) : null;
+    const retosAceptados = usuario ? (usuario.retosAceptados || []).map(r => r.retoId) : [];
+    
+    // Renderizar retos en el grid
+    const gridContainer = document.getElementById('retosGrid');
+    if (!gridContainer) return;
+    
+    gridContainer.innerHTML = '';
+    
+    retos.forEach(reto => {
+      const estaAceptado = retosAceptados.includes(reto.id);
+      const btnTexto = estaAceptado ? 'Ir al reto' : 'Unirse';
+      const btnClase = estaAceptado ? 'bg-chip-light dark:bg-chip-dark text-text-light dark:text-text-dark' : 'bg-accent text-white';
+      
+      const retoHTML = `
+        <div class="flex items-start justify-between gap-4 rounded-xl bg-card-light dark:bg-card-dark p-4 shadow-[0_4px_12px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_12px_rgba(0,0,0,0.2)] cursor-pointer hover:shadow-lg transition-shadow" onclick="irAlReto('${reto.id}')">
+          <div class="flex flex-[2_2_0px] flex-col gap-4">
+            <div class="flex flex-col gap-1">
+              <p class="text-primary dark:text-primary text-sm font-normal leading-normal">${reto.dificultad}, ${reto.categoria}</p>
+              <p class="text-text-light dark:text-text-dark text-base font-bold leading-tight">${reto.titulo}</p>
+              <p class="text-text-muted-light dark:text-text-muted-dark text-sm font-normal leading-normal">${reto.descripcion}</p>
+              <p class="text-accent text-sm font-bold pt-2">+${reto.puntos} puntos</p>
+            </div>
+            <button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-8 px-4 flex-row-reverse ${btnClase} pr-2 gap-1 text-sm font-medium leading-normal w-fit" onclick="event.stopPropagation(); ${estaAceptado ? `irAlReto('${reto.id}')` : `aceptarReto('${reto.id}')`}">
+              <span class="material-symbols-outlined text-base">${estaAceptado ? 'arrow_forward' : 'add'}</span>
+              <span class="truncate">${btnTexto}</span>
+            </button>
+          </div>
+          <div class="flex-1 flex items-center justify-center p-2 bg-accent/10 dark:bg-accent/20 rounded-lg text-2xl">
+            ${reto.icono || '🌱'}
+          </div>
+        </div>
+      `;
+      gridContainer.innerHTML += retoHTML;
+    });
+  }
+  
+  // Aceptar reto
+  function aceptarReto(retoId) {
+    if (typeof simuladorLocal === 'undefined') return;
+    
+    const sesion = simuladorLocal.obtenerSesion();
+    if (!sesion) {
+      window.location.href = './login.html';
+      return;
+    }
+    
+    const resultado = simuladorLocal.aceptarReto(sesion.usuarioId, retoId);
+    if (resultado.error) {
+      alert('Error: ' + resultado.error);
+    } else {
+      alert('¡Reto aceptado! Ahora puedes completarlo.');
+      cargarRetos();
+    }
+  }
+  
+  // Ir al detalle del reto
+  function irAlReto(retoId) {
+    window.location.href = './challengedetails.html?id=' + retoId;
+  }
+  
+  // Filtrar por categoría
+  function filtrarPorCategoria(categoria) {
+    cargarRetos(categoria);
+  }
+  
+  // Cerrar sesión
   function cerrarSesion() {
-    localStorage.removeItem('ecochallenge_sesion');
+    if (typeof simuladorLocal !== 'undefined') {
+      simuladorLocal.limpiarSesion();
+    }
     window.location.href = './login.html';
   }
   
@@ -242,6 +263,24 @@
     if (btnCerrar) {
       btnCerrar.addEventListener('click', cerrarSesion);
     }
+    
+    // Cargar retos inicialmente
+    cargarRetos();
+    
+    // Agregar listeners a los filtros de categoría
+    const botonesCategoria = document.querySelectorAll('.categoria-filter');
+    botonesCategoria.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const categoria = this.dataset.categoria;
+        // Cambiar estilo del botón activo
+        botonesCategoria.forEach(b => b.classList.remove('bg-accent', 'text-white'));
+        botonesCategoria.forEach(b => b.classList.add('bg-chip-light', 'dark:bg-chip-dark'));
+        this.classList.remove('bg-chip-light', 'dark:bg-chip-dark');
+        this.classList.add('bg-accent', 'text-white');
+        // Filtrar
+        filtrarPorCategoria(categoria);
+      });
+    });
   });
 </script>
 
